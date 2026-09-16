@@ -1,4 +1,8 @@
-import type { Auth } from '@/types/auth';
+// This file must stay a module. Without a top-level import or export, the
+// `declare module` blocks below become ambient module *declarations* that
+// shadow the real packages instead of augmenting them, which silently strips
+// the types off @inertiajs/core and vue.
+export {};
 
 // Extend ImportMeta interface for Vite...
 declare module 'vite/client' {
@@ -17,7 +21,6 @@ declare module '@inertiajs/core' {
     export interface InertiaConfig {
         sharedPageProps: {
             name: string;
-            auth: Auth;
             sidebarOpen: boolean;
             [key: string]: unknown;
         };
