@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // The sidebar component writes this cookie from JavaScript, so it
+        // arrives unencrypted and EncryptCookies would discard it.
+        $middleware->encryptCookies(except: ['sidebar_state']);
+
         $middleware->web(append: [
             HandleInertiaRequests::class,
             AddLinkHeadersForPreloadedAssets::class,
