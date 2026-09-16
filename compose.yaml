@@ -21,5 +21,28 @@ services:
       timeout: 5s
       retries: 20
 
+  pgadmin:
+    image: dpage/pgadmin4:9
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@jobtrail.local
+      PGADMIN_DEFAULT_PASSWORD: secret
+      # pgAdmin 9 rejects .local addresses: RFC 6761 reserves it, and the
+      # image's entrypoint refuses to create the initial user. This allows it
+      # so the credentials documented in docs/design.md §10 still work.
+      PGADMIN_CONFIG_ALLOW_SPECIAL_EMAIL_DOMAINS: "['local']"
+      # Without this pgAdmin asks for a second "master password" before it
+      # will open a saved server connection.
+      PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: "False"
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - "5050:80"
+    volumes:
+      - ./docker/pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - pgadmin:/var/lib/pgadmin
+
 volumes:
   pgdata:
+  pgadmin:
