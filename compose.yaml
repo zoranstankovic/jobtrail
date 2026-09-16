@@ -50,6 +50,25 @@ services:
       - .:/var/www/html:ro
       - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
 
+  vite:
+    build:
+      context: .
+      dockerfile: docker/app/Dockerfile
+    depends_on:
+      app:
+        condition: service_healthy
+    # The image's ENTRYPOINT runs migrations and php-fpm; this container only
+    # needs Node, so it is overridden.
+    entrypoint: ["/bin/sh", "-c"]
+    command: ["if [ ! -d node_modules ]; then npm install; fi; exec npm run dev"]
+    working_dir: /var/www/html
+    environment:
+      VITE_POLLING: "true"
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/var/www/html
+
   pgadmin:
     image: dpage/pgadmin4:9
     depends_on:

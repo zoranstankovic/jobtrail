@@ -32,7 +32,19 @@ export default defineConfig({
         }),
     ]),
     server: {
+        // Listen on every interface inside the container so Docker's port
+        // mapping can reach it.
+        host: '0.0.0.0',
+        port: 5173,
+        strictPort: true,
+        // What the browser should connect to. laravel-vite-plugin also uses
+        // this value for the URL it writes into public/hot.
+        hmr: {
+            host: 'localhost',
+        },
         watch: {
+            // Filesystem events do not reliably cross the macOS bind mount.
+            usePolling: process.env.VITE_POLLING === 'true',
             ignored: [
                 '**/.agents/**',
                 '**/.claude/**',
