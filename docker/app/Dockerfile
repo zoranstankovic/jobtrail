@@ -34,6 +34,11 @@ RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 # abort the install.
 ENV COMPOSER_MEMORY_LIMIT=-1
 
+# This image ships no php.ini, so PHP's compiled-in 128M default applies.
+# Larastan at level 7 exhausts it and its parallel workers crash. The conf.d
+# drop-in applies to both the CLI and FPM.
+RUN printf 'memory_limit=512M\n' > /usr/local/etc/php/conf.d/zz-memory-limit.ini
+
 WORKDIR /var/www/html
 
 COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint
