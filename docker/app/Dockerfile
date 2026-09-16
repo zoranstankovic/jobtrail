@@ -35,3 +35,9 @@ RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
 ENV COMPOSER_MEMORY_LIMIT=-1
 
 WORKDIR /var/www/html
+
+COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+CMD ["php-fpm", "--nodaemonize"]
