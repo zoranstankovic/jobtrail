@@ -1,0 +1,92 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  ci:
+    name: Lint, static analysis and tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_DB: jobtrail_testing
+          POSTGRES_USER: jobtrail
+          POSTGRES_PASSWORD: secret
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U jobtrail -d jobtrail_testing"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      # These win over .env: Laravel's dotenv loader is immutable, so it never
+      # overwrites a variable that already exists in the environment.
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: jobtrail_testing
+      DB_USERNAME: jobtrail
+      DB_PASSWORD: secret
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v7
+
+      - name: Set up PHP 8.4
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: pdo_pgsql, intl, zip
+          coverage: none
+
+      - name: Set up Node 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Resolve the Composer cache directory
+        id: composer-cache
+        run: echo "dir=$(composer config cache-files-dir)" >> "$GITHUB_OUTPUT"
+
+      - name: Cache Composer packages
+        uses: actions/cache@v6
+        with:
+          path: ${{ steps.composer-cache.outputs.dir }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('composer.lock') }}
+          restore-keys: ${{ runner.os }}-composer-
+
+      - name: Install PHP dependencies
+        run: composer install --no-interaction --prefer-dist --no-progress
+
+      - name: Prepare the environment file
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Install JavaScript dependencies
+        run: npm ci
+
+      - name: Build the frontend assets
+        run: npm run build
+
+      - name: Check code style (Pint)
+        run: composer lint:check
+
+      - name: Run static analysis (Larastan)
+        run: composer types:check
+
+      - name: Check TypeScript types (vue-tsc)
+        run: npm run types:check
+
+      - name: Check formatting and lints (Vite+)
+        run: npm run check
+
+      - name: Run the test suite (Pest)
+        run: php artisan test
