@@ -9,6 +9,7 @@ use App\Enums\WorkMode;
 use Carbon\CarbonImmutable;
 use Database\Factories\JobPostingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
+use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -53,6 +54,7 @@ use Illuminate\Support\Str;
     'description',
     'posted_at',
 ])]
+#[Hidden(['search_vector'])]
 class JobPosting extends Model
 {
     /** @use HasFactory<JobPostingFactory> */
