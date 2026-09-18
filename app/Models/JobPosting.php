@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Str;
 
 /**
@@ -41,6 +42,7 @@ use Illuminate\Support\Str;
  * @property CarbonImmutable|null $updated_at
  * @property-read Company $company
  * @property-read Collection<int, Skill> $skills
+ * @property-read JobApplication|null $application
  */
 #[Fillable([
     'title',
@@ -84,6 +86,16 @@ class JobPosting extends Model
     public function skills(): BelongsToMany
     {
         return $this->belongsToMany(Skill::class);
+    }
+
+    /**
+     * No application means "not applied" (docs/design.md §4.1).
+     *
+     * @return HasOne<JobApplication, $this>
+     */
+    public function application(): HasOne
+    {
+        return $this->hasOne(JobApplication::class);
     }
 
     /**

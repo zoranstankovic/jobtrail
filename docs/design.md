@@ -222,7 +222,7 @@ Skills are created on the fly from the posting form. Matching an existing skill 
 | Column | Type | Constraints / notes |
 |---|---|---|
 | `id` | bigint | PK |
-| `job_posting_id` | bigint | FK, **unique**, `ON DELETE CASCADE` |
+| `job_posting_id` | bigint | FK, **unique**, `ON DELETE RESTRICT` |
 | `status` | varchar | NOT NULL; CHECK in `ApplicationStatus` values; denormalized copy of the latest event's `to_status` |
 | `applied_at` | timestamptz | nullable; set to the `occurred_at` of the earliest event with `to_status = applied` |
 | `notes` | text | nullable |
@@ -279,14 +279,14 @@ All rules live in Action classes. Every multi-row write runs in a single DB tran
    - `status` reverts to that event's `from_status`, and `applied_at` is recomputed.
    - The creation event (`from_status = NULL`) cannot be deleted. Delete the application instead.
 5. **Delete application.** Deletes the application and its events. The posting becomes "not applied" again.
-6. **Delete posting.** Requires confirmation in the UI. Cascades to the application, its events and the skill links.
+6. **Delete posting** (`DeleteJobPosting`). Allowed only when the posting has no application; otherwise a clear error message is shown, so an application's history is never lost by accident. Delete the application first. Deleting a posting removes its skill links.
 7. **Delete company.** Allowed only when the company has no postings; otherwise a clear error message is shown.
 8. **Consistency invariant.** `job_applications.status` always equals `to_status` of the latest event. Every Action maintains this, and the tests assert it.
 
 ### Error handling
 
 - **FormRequests** validate every input. This covers required fields, enum values, `salary_min <= salary_max`, URL format and uniqueness of URL and company name. Uniqueness is checked case-insensitively, so the user sees a friendly message instead of a DB error.
-- **Domain rule violations** from Actions (same-status change, deleting a non-latest event, deleting a company that has postings) are raised as `ValidationException`. Inertia then shows them inline or as a toast.
+- **Domain rule violations** from Actions (same-status change, deleting a non-latest event, deleting a posting that has an application, deleting a company that has postings) are raised as `ValidationException`. Inertia then shows them inline or as a toast.
 - **DB constraints** are the last line of defense, not the primary validation.
 - Missing records return the standard 404.
 
@@ -367,6 +367,7 @@ Every screen is an Inertia page in `resources/js/pages/`. Filters, sorting and p
    - create a posting with an inline new company, new and existing skills (case-insensitive match) and "already applied"
    - validation failures
    - every index filter, including full-text search
+   - posting delete blocked while it has an application
    - company delete blocked
    - `assertInertia` checks that each page gets the correct component and props
 3. **DB constraint tests:**
