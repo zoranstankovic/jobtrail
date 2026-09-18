@@ -1,6 +1,8 @@
 <?php
 
+use App\Models\JobApplication;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /*
@@ -44,7 +46,24 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+/**
+ * Assert the consistency invariant (docs/design.md §5.8): status equals the
+ * latest event's to_status, and applied_at equals the occurred_at of the
+ * earliest "applied" event. Reads raw rows so it never reuses the code under
+ * test.
+ */
+function expectApplicationToBeConsistent(JobApplication $application): void
 {
-    // ..
+    $events = DB::table('job_application_events')
+        ->where('job_application_id', $application->id)
+        ->orderBy('occurred_at')
+        ->orderBy('id')
+        ->get();
+
+    $row = DB::table('job_applications')->where('id', $application->id)->first();
+
+    expect($row)->not->toBeNull()
+        ->and($events)->not->toBeEmpty()
+        ->and($row->status)->toBe($events->last()->to_status)
+        ->and($row->applied_at)->toBe($events->firstWhere('to_status', 'applied')?->occurred_at);
 }
