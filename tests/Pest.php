@@ -1,6 +1,10 @@
 <?php
 
+use App\Actions\CreateJobApplication;
+use App\Enums\ApplicationStatus;
 use App\Models\JobApplication;
+use App\Models\JobPosting;
+use Carbon\CarbonImmutable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -66,4 +70,18 @@ function expectApplicationToBeConsistent(JobApplication $application): void
         ->and($events)->not->toBeEmpty()
         ->and($row->status)->toBe($events->last()->to_status)
         ->and($row->applied_at)->toBe($events->firstWhere('to_status', 'applied')?->occurred_at);
+}
+
+/**
+ * Create an application through the real Action, at a fixed time.
+ */
+function createApplication(
+    ApplicationStatus $status = ApplicationStatus::Saved,
+    string $occurredAt = '2026-09-01 10:00:00',
+): JobApplication {
+    return app(CreateJobApplication::class)->handle(
+        JobPosting::factory()->create(),
+        $status,
+        CarbonImmutable::parse($occurredAt),
+    );
 }
