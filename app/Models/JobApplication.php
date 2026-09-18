@@ -62,6 +62,30 @@ class JobApplication extends Model
     }
 
     /**
+     * Recompute status and applied_at from the events, so the consistency
+     * invariant holds (docs/design.md §5.8): status is the latest event's
+     * to_status, and applied_at is the occurred_at of the earliest "applied"
+     * event.
+     */
+    public function syncStatusFromEvents(): void
+    {
+        $latest = $this->latestEvent()->firstOrFail();
+
+        $firstApplied = $this->events()
+            ->where('to_status', ApplicationStatus::Applied)
+            ->orderBy('occurred_at')
+            ->orderBy('id')
+            ->first();
+
+        $this->status = $latest->to_status;
+        $this->applied_at = $firstApplied?->occurred_at;
+        $this->save();
+
+        // A previously loaded latestEvent may now be stale.
+        $this->unsetRelation('latestEvent');
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>
