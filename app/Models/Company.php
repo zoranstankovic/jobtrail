@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 
 /**
  * @property int $id
@@ -19,6 +20,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property CarbonImmutable|null $created_at
  * @property CarbonImmutable|null $updated_at
  * @property-read Collection<int, JobPosting> $jobPostings
+ * @property-read Collection<int, JobApplication> $jobApplications
+ * @property-read int|null $job_postings_count
+ * @property-read int|null $job_applications_count
  */
 #[Fillable(['name', 'website', 'city', 'notes'])]
 class Company extends Model
@@ -32,5 +36,15 @@ class Company extends Model
     public function jobPostings(): HasMany
     {
         return $this->hasMany(JobPosting::class);
+    }
+
+    /**
+     * The applications of this company's postings.
+     *
+     * @return HasManyThrough<JobApplication, JobPosting, $this>
+     */
+    public function jobApplications(): HasManyThrough
+    {
+        return $this->hasManyThrough(JobApplication::class, JobPosting::class);
     }
 }

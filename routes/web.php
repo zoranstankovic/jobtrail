@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CompanyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -12,5 +13,4 @@ Route::get('/postings', fn () => Inertia::render('postings/Index'))
 Route::get('/applications', fn () => Inertia::render('applications/Index'))
     ->name('applications.index');
 
-Route::get('/companies', fn () => Inertia::render('companies/Index'))
-    ->name('companies.index');
+Route::resource('companies', CompanyController::class)->only(['index']);
