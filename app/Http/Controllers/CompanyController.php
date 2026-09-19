@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Company;
+use App\Models\JobPosting;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -25,6 +26,26 @@ class CompanyController extends Controller
 
         return Inertia::render('companies/Index', [
             'companies' => $companies,
+        ]);
+    }
+
+    public function show(Company $company): Response
+    {
+        $postings = $company->jobPostings()
+            ->with('application')
+            ->latest()
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn (JobPosting $posting): array => [
+                'id' => $posting->id,
+                'title' => $posting->title,
+                'location' => $posting->location,
+                'status' => $posting->application?->status,
+            ]);
+
+        return Inertia::render('companies/Show', [
+            'company' => $company->only(['id', 'name', 'website', 'city', 'notes']),
+            'postings' => $postings,
         ]);
     }
 }

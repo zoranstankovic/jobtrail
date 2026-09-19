@@ -14,7 +14,9 @@ import {
     TableRow,
 } from '@/components/ui/table';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { show as showCompany } from '@/routes/companies';
 import type { CompanyListItem } from '@/types/models';
+import { Link } from '@inertiajs/vue3';
 
 defineProps<{ companies: CompanyListItem[] }>();
 </script>
@@ -43,7 +45,12 @@ defineProps<{ companies: CompanyListItem[] }>();
             <TableBody>
                 <TableRow v-for="company in companies" :key="company.id">
                     <TableCell class="font-medium">
-                        {{ company.name }}
+                        <Link
+                            :href="showCompany(company.id)"
+                            class="underline-offset-4 hover:underline"
+                        >
+                            {{ company.name }}
+                        </Link>
                     </TableCell>
                     <TableCell>{{ company.city ?? '—' }}</TableCell>
                     <TableCell>
