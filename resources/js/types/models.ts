@@ -32,3 +32,28 @@ export type CompanyFormData = {
     city: string;
     notes: string;
 };
+
+/** Laravel's LengthAwarePaginator as JSON — the fields the UI uses. */
+export type Paginated<T> = {
+    data: T[];
+    current_page: number;
+    last_page: number;
+    from: number | null;
+    to: number | null;
+    total: number;
+    prev_page_url: string | null;
+    next_page_url: string | null;
+};
+
+/** A row of the postings index (JobPostingController@index). */
+export type PostingListItem = {
+    id: number;
+    title: string;
+    company: { id: number; name: string };
+    location: string | null;
+    work_mode: string | null;
+    seniority: string | null;
+    skills: string[];
+    source: string;
+    status: string | null;
+};
