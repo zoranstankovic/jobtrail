@@ -2,6 +2,12 @@
 
 namespace App\Http\Middleware;
 
+use App\Enums\ApplicationStatus;
+use App\Enums\EmploymentType;
+use App\Enums\SalaryPeriod;
+use App\Enums\Seniority;
+use App\Enums\WorkMode;
+use App\Support\EnumOptions;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -40,6 +46,13 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state')
                 || $request->cookie('sidebar_state') === 'true',
+            'enums' => fn (): array => [
+                'applicationStatus' => EnumOptions::for(ApplicationStatus::class),
+                'workMode' => EnumOptions::for(WorkMode::class),
+                'employmentType' => EnumOptions::for(EmploymentType::class),
+                'seniority' => EnumOptions::for(Seniority::class),
+                'salaryPeriod' => EnumOptions::for(SalaryPeriod::class),
+            ],
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use App\Enums\ApplicationStatus;
 use App\Enums\EmploymentType;
+use App\Enums\HasLabel;
 use App\Enums\SalaryPeriod;
 use App\Enums\Seniority;
 use App\Enums\WorkMode;
@@ -37,3 +38,16 @@ it('allows only saved and applied as the initial status', function (): void {
         ApplicationStatus::Applied,
     ]);
 });
+
+it('labels every case for the UI', function (string $enum, array $labels): void {
+    /** @var class-string<BackedEnum&HasLabel> $enum */
+    $actual = array_map(fn (HasLabel $case): string => $case->label(), $enum::cases());
+
+    expect($actual)->toBe($labels);
+})->with([
+    'ApplicationStatus' => [ApplicationStatus::class, ['Saved', 'Applied', 'Interviewing', 'Offer', 'Accepted', 'Rejected', 'Withdrawn']],
+    'WorkMode' => [WorkMode::class, ['On-site', 'Hybrid', 'Remote']],
+    'EmploymentType' => [EmploymentType::class, ['Full-time', 'Part-time', 'Contract', 'Internship']],
+    'Seniority' => [Seniority::class, ['Intern', 'Junior', 'Mid-level', 'Senior', 'Lead']],
+    'SalaryPeriod' => [SalaryPeriod::class, ['Yearly', 'Monthly', 'Hourly']],
+]);

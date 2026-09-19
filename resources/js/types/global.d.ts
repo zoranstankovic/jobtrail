@@ -1,3 +1,5 @@
+import type { SharedEnums } from './enums';
+
 // This file must stay a module. Without a top-level import or export, the
 // `declare module` blocks below become ambient module *declarations* that
 // shadow the real packages instead of augmenting them, which silently strips
@@ -22,6 +24,7 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             sidebarOpen: boolean;
+            enums: SharedEnums;
             [key: string]: unknown;
         };
     }
