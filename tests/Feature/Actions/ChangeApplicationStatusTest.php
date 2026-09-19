@@ -68,6 +68,7 @@ it('dates the change now when no date is given', function (): void {
     $event = app(ChangeApplicationStatus::class)->handle($application, ApplicationStatus::Applied);
 
     expect($event->fresh()?->occurred_at->toDateTimeString())->toBe('2026-09-10 08:30:00');
+    expectApplicationToBeConsistent($application);
 });
 
 it('accepts a change dated exactly at the latest event', function (): void {

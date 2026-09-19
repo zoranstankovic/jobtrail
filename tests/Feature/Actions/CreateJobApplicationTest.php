@@ -46,6 +46,7 @@ it('dates the creation event now when no date is given', function (): void {
     $application = app(CreateJobApplication::class)->handle(JobPosting::factory()->create());
 
     expect($application->events()->sole()->occurred_at->toDateTimeString())->toBe('2026-09-10 08:30:00');
+    expectApplicationToBeConsistent($application);
 });
 
 it('rejects an initial status other than saved or applied', function (ApplicationStatus $status): void {
