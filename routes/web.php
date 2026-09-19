@@ -13,4 +13,4 @@ Route::get('/postings', fn () => Inertia::render('postings/Index'))
 Route::get('/applications', fn () => Inertia::render('applications/Index'))
     ->name('applications.index');
 
-Route::resource('companies', CompanyController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update']);
+Route::resource('companies', CompanyController::class);

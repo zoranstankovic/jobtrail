@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import DeleteButton from '@/components/DeleteButton.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Button } from '@/components/ui/button';
-import { edit as editCompany } from '@/routes/companies';
+import {
+    destroy as destroyCompany,
+    edit as editCompany,
+} from '@/routes/companies';
 import { Link } from '@inertiajs/vue3';
 import {
     Table,
@@ -23,6 +27,11 @@ defineProps<{ company: Company; postings: CompanyPosting[] }>();
             <Button variant="outline" size="sm" as-child>
                 <Link :href="editCompany(company.id)">Edit</Link>
             </Button>
+            <DeleteButton
+                :action="destroyCompany(company.id)"
+                :title="`Delete ${company.name}?`"
+                description="This cannot be undone. A company that still has job postings cannot be deleted."
+            />
         </template>
         <div class="grid gap-8 lg:grid-cols-3">
             <dl class="grid content-start gap-4 text-sm">

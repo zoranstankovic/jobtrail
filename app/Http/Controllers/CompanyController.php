@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\DeleteCompany;
 use App\Http\Requests\CompanyRequest;
 use App\Models\Company;
 use App\Models\JobPosting;
@@ -79,5 +80,14 @@ class CompanyController extends Controller
         $this->toast('Company updated.');
 
         return to_route('companies.show', $company);
+    }
+
+    public function destroy(Company $company, DeleteCompany $deleteCompany): RedirectResponse
+    {
+        $deleteCompany->handle($company);
+
+        $this->toast('Company deleted.');
+
+        return to_route('companies.index');
     }
 }
