@@ -19,8 +19,9 @@ fi
 echo "[entrypoint] applying pending migrations..."
 php artisan migrate --force
 
-# Plan 2 inserts `php artisan app:seed-demo-if-empty` here, once that command
-# exists (docs/design.md §3.2 step 4).
+# Seeds only when the companies table is empty, so restarts keep your data.
+echo "[entrypoint] seeding demo data if the database is empty..."
+php artisan app:seed-demo-if-empty
 
 echo "[entrypoint] ready"
 touch /tmp/app-ready
