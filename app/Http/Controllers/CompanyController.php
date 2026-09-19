@@ -60,6 +60,8 @@ class CompanyController extends Controller
     {
         $company = Company::query()->create($request->validated());
 
+        $this->toast('Company created.');
+
         return to_route('companies.show', $company);
     }
 }

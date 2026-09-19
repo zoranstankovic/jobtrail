@@ -27,6 +27,12 @@ declare module '@inertiajs/core' {
             enums: SharedEnums;
             [key: string]: unknown;
         };
+        flashDataType: {
+            toast?: {
+                type: 'success' | 'error';
+                message: string;
+            };
+        };
     }
 }
 

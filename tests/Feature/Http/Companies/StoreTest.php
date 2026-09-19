@@ -19,7 +19,9 @@ it('creates a company and redirects to it', function (): void {
 
     $company = Company::query()->sole();
 
-    $response->assertRedirect("/companies/{$company->id}");
+    $response
+        ->assertRedirect("/companies/{$company->id}")
+        ->assertInertiaFlash('toast', ['type' => 'success', 'message' => 'Company created.']);
 
     expect($company->only(['name', 'website', 'city', 'notes']))->toBe([
         'name' => 'Acme GmbH',
