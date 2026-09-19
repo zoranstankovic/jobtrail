@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CompanyRequest;
 use App\Models\Company;
 use App\Models\JobPosting;
+use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -47,5 +49,17 @@ class CompanyController extends Controller
             'company' => $company->only(['id', 'name', 'website', 'city', 'notes']),
             'postings' => $postings,
         ]);
+    }
+
+    public function create(): Response
+    {
+        return Inertia::render('companies/Create');
+    }
+
+    public function store(CompanyRequest $request): RedirectResponse
+    {
+        $company = Company::query()->create($request->validated());
+
+        return to_route('companies.show', $company);
     }
 }

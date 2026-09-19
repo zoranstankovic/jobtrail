@@ -24,3 +24,11 @@ export type CompanyPosting = {
     location: string | null;
     status: string | null;
 };
+
+/** The company form's fields; every value is a string, as inputs produce. */
+export type CompanyFormData = {
+    name: string;
+    website: string;
+    city: string;
+    notes: string;
+};

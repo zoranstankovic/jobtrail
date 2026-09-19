@@ -26,6 +26,9 @@ const sidebarOpen = computed(() => page.props.sidebarOpen !== false);
             <header class="flex h-14 shrink-0 items-center gap-2 border-b px-4">
                 <SidebarTrigger />
                 <h1 class="text-sm font-medium">{{ title }}</h1>
+                <div class="ml-auto flex items-center gap-2">
+                    <slot name="actions" />
+                </div>
             </header>
             <main class="flex-1 p-6">
                 <slot />
