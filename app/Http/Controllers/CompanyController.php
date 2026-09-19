@@ -64,4 +64,20 @@ class CompanyController extends Controller
 
         return to_route('companies.show', $company);
     }
+
+    public function edit(Company $company): Response
+    {
+        return Inertia::render('companies/Edit', [
+            'company' => $company->only(['id', 'name', 'website', 'city', 'notes']),
+        ]);
+    }
+
+    public function update(CompanyRequest $request, Company $company): RedirectResponse
+    {
+        $company->update($request->validated());
+
+        $this->toast('Company updated.');
+
+        return to_route('companies.show', $company);
+    }
 }

@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import StatusBadge from '@/components/StatusBadge.vue';
+import { Button } from '@/components/ui/button';
+import { edit as editCompany } from '@/routes/companies';
+import { Link } from '@inertiajs/vue3';
 import {
     Table,
     TableBody,
@@ -16,6 +19,11 @@ defineProps<{ company: Company; postings: CompanyPosting[] }>();
 
 <template>
     <AppLayout :title="company.name">
+        <template #actions>
+            <Button variant="outline" size="sm" as-child>
+                <Link :href="editCompany(company.id)">Edit</Link>
+            </Button>
+        </template>
         <div class="grid gap-8 lg:grid-cols-3">
             <dl class="grid content-start gap-4 text-sm">
                 <div>
