@@ -6,6 +6,7 @@ import {
     destroy as destroyCompany,
     edit as editCompany,
 } from '@/routes/companies';
+import { show as showPosting } from '@/routes/postings';
 import { Link } from '@inertiajs/vue3';
 import {
     Table,
@@ -81,7 +82,12 @@ defineProps<{ company: Company; postings: CompanyPosting[] }>();
                     <TableBody>
                         <TableRow v-for="posting in postings" :key="posting.id">
                             <TableCell class="font-medium">
-                                {{ posting.title }}
+                                <Link
+                                    :href="showPosting(posting.id)"
+                                    class="underline-offset-4 hover:underline"
+                                >
+                                    {{ posting.title }}
+                                </Link>
                             </TableCell>
                             <TableCell>{{ posting.location ?? '—' }}</TableCell>
                             <TableCell>

@@ -68,3 +68,24 @@ export type PostingFilters = {
     skill: string | null;
     sort: 'created' | 'posted';
 };
+
+/** A posting's fields (JobPostingController::presentPosting). */
+export type Posting = {
+    id: number;
+    title: string;
+    url: string | null;
+    source: string;
+    location: string | null;
+    work_mode: string | null;
+    employment_type: string | null;
+    seniority: string | null;
+    salary_min: number | null;
+    salary_max: number | null;
+    salary_currency: string;
+    salary_period: string | null;
+    description: string | null;
+    posted_at: string | null;
+    created_at: string;
+    company: { id: number; name: string };
+    skills: string[];
+};

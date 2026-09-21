@@ -20,6 +20,7 @@ import {
 import { useEnums } from '@/composables/useEnums';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { show as showCompany } from '@/routes/companies';
+import { show as showPosting } from '@/routes/postings';
 import type {
     Paginated,
     PostingFilters as PostingFiltersValue,
@@ -77,7 +78,12 @@ const { label } = useEnums();
                         :key="posting.id"
                     >
                         <TableCell class="font-medium">
-                            {{ posting.title }}
+                            <Link
+                                :href="showPosting(posting.id)"
+                                class="underline-offset-4 hover:underline"
+                            >
+                                {{ posting.title }}
+                            </Link>
                         </TableCell>
                         <TableCell>
                             <Link
