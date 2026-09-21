@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Enums\ApplicationStatus;
 use App\Models\JobApplication;
 use App\Models\JobApplicationEvent;
+use App\Support\EventTime;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
@@ -29,6 +30,8 @@ final class ChangeApplicationStatus
                 'status' => 'The application already has this status.',
             ]);
         }
+
+        EventTime::ensureNotInFuture($occurredAt);
 
         // Backdating behind the latest event would leave the new event
         // "not latest", so the status would silently not change. Older events

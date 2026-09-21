@@ -54,3 +54,14 @@ export function fromDateTimeLocal(value: string): string | null {
 export function daysSince(iso: string, now: Date = new Date()): number {
     return Math.floor((now.getTime() - new Date(iso).getTime()) / 86_400_000);
 }
+
+/**
+ * The `max` for a datetime-local input: the end of today. Later days are
+ * refused by the browser at once; the server rejects later times today.
+ */
+export function endOfTodayLocal(): string {
+    const date = new Date();
+    date.setHours(23, 59, 0, 0);
+
+    return toDateTimeLocal(date);
+}

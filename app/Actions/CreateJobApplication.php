@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Enums\ApplicationStatus;
 use App\Models\JobApplication;
 use App\Models\JobPosting;
+use App\Support\EventTime;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
@@ -35,6 +36,8 @@ final class CreateJobApplication
         }
 
         $occurredAt ??= CarbonImmutable::now();
+
+        EventTime::ensureNotInFuture($occurredAt);
 
         return DB::transaction(function () use ($posting, $status, $occurredAt, $notes): JobApplication {
             $application = $posting->application()->create([

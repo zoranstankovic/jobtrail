@@ -13,7 +13,11 @@ import {
 import { FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates';
+import {
+    endOfTodayLocal,
+    fromDateTimeLocal,
+    toDateTimeLocal,
+} from '@/lib/dates';
 import { update as updateEvent } from '@/routes/events';
 import type { ApplicationEvent } from '@/types/models';
 import { useForm } from '@inertiajs/vue3';
@@ -71,6 +75,7 @@ function submit(): void {
                             :id="`event-${event.id}-occurred_at`"
                             v-model="form.occurred_at"
                             type="datetime-local"
+                            :max="endOfTodayLocal()"
                         />
                     </FormField>
                     <FormField

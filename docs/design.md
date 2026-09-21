@@ -252,7 +252,7 @@ Index on `status`.
 | `job_application_id` | bigint | FK, `ON DELETE CASCADE` |
 | `from_status` | varchar | nullable (`NULL` on the creation event); CHECK in statuses |
 | `to_status` | varchar | NOT NULL; CHECK in statuses |
-| `occurred_at` | timestamptz | NOT NULL; chosen by the user, default now; can be backdated |
+| `occurred_at` | timestamptz | NOT NULL; chosen by the user, default now; can be backdated, but not set in the future (5 minutes of tolerance for a browser clock that runs ahead) |
 | `note` | text | nullable |
 | `created_at` | timestamptz | when the row was actually recorded |
 
@@ -288,7 +288,7 @@ All rules live in Action classes. Every multi-row write runs in a single DB tran
 ### Error handling
 
 - **FormRequests** validate every input. This covers required fields, enum values, `salary_min <= salary_max`, URL format and uniqueness of URL and company name. Uniqueness is checked case-insensitively, so the user sees a friendly message instead of a DB error.
-- **Domain rule violations** from Actions (same-status change, an event dated before the latest event or out of its place in the timeline, deleting a non-latest event, deleting a posting that has an application, deleting a company that has postings) are raised as `ValidationException`. Inertia then shows them inline or as a toast.
+- **Domain rule violations** from Actions (same-status change, an event dated in the future, before the latest event or out of its place in the timeline, deleting a non-latest event, deleting a posting that has an application, deleting a company that has postings) are raised as `ValidationException`. Inertia then shows them inline or as a toast.
 - **DB constraints** are the last line of defense, not the primary validation.
 - Missing records return the standard 404.
 

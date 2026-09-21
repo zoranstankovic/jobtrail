@@ -152,3 +152,14 @@ it('reports a skill that is too long under its own key, named "skill"', function
 
     expect(JobPosting::query()->count())->toBe(0);
 });
+
+it('rejects an "already applied" date in the future', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-21 12:00:00'));
+
+    $this->post('/postings', postingInput([
+        'already_applied' => true,
+        'applied_at' => '2026-09-23T10:00:00.000Z',
+    ]))->assertSessionHasErrors(['applied_at' => 'The date cannot be in the future.']);
+
+    expect(JobPosting::query()->count())->toBe(0);
+});

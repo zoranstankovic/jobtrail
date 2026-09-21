@@ -9,6 +9,7 @@ use App\Models\JobApplication;
 use App\Models\JobPosting;
 use App\Models\Skill;
 use Carbon\CarbonImmutable;
+use Illuminate\Validation\ValidationException;
 
 it('creates a posting for an existing company', function (): void {
     $company = Company::factory()->create();
@@ -90,6 +91,20 @@ it('writes nothing when creating the application fails', function (): void {
         'source' => 'linkedin',
     ], ['Laravel'], CarbonImmutable::parse('2026-09-01 10:00:00')))
         ->toThrow(RuntimeException::class, 'Simulated failure');
+
+    expect(JobPosting::query()->count())->toBe(0)
+        ->and(Company::query()->count())->toBe(0)
+        ->and(Skill::query()->count())->toBe(0);
+});
+
+it('rejects an application date in the future and writes nothing', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-21 12:00:00'));
+
+    expect(fn () => app(CreateJobPosting::class)->handle('Isarwerk Digital GmbH', [
+        'title' => 'Backend Engineer',
+        'source' => 'linkedin',
+    ], ['Laravel'], CarbonImmutable::parse('2026-09-23 10:00:00')))
+        ->toThrow(ValidationException::class, 'cannot be in the future');
 
     expect(JobPosting::query()->count())->toBe(0)
         ->and(Company::query()->count())->toBe(0)

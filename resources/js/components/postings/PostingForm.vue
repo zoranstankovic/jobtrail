@@ -13,7 +13,11 @@ import {
 } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
 import { useEnums } from '@/composables/useEnums';
-import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates';
+import {
+    endOfTodayLocal,
+    fromDateTimeLocal,
+    toDateTimeLocal,
+} from '@/lib/dates';
 import type { PostingFormData } from '@/types/models';
 import type { RouteDefinition } from '@/wayfinder';
 import { useForm } from '@inertiajs/vue3';
@@ -278,6 +282,7 @@ function submit(): void {
                         id="applied_at"
                         v-model="form.applied_at"
                         type="datetime-local"
+                        :max="endOfTodayLocal()"
                         class="w-fit"
                     />
                 </FormField>

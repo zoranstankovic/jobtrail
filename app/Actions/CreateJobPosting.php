@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Enums\ApplicationStatus;
 use App\Models\Company;
 use App\Models\JobPosting;
+use App\Support\EventTime;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 
@@ -33,6 +34,12 @@ final class CreateJobPosting
         array $skillNames = [],
         ?CarbonInterface $appliedAt = null,
     ): JobPosting {
+        // Checked before anything is written, and under the form's field
+        // name; CreateJobApplication would report it as occurred_at.
+        if ($appliedAt !== null) {
+            EventTime::ensureNotInFuture($appliedAt, 'applied_at');
+        }
+
         return DB::transaction(function () use ($company, $attributes, $skillNames, $appliedAt): JobPosting {
             $company = is_string($company) ? $this->resolveCompany->handle($company) : $company;
 

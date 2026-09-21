@@ -113,3 +113,13 @@ it('writes nothing when updating the application fails', function (): void {
 
     expectApplicationToBeConsistent($application);
 });
+
+it('rejects a change dated in the future', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-21 12:00:00'));
+    $application = createApplication(ApplicationStatus::Applied, '2026-09-01 10:00:00');
+
+    expect(fn () => changeStatus($application, ApplicationStatus::Interviewing, '2026-09-23 10:00:00'))
+        ->toThrow(ValidationException::class, 'cannot be in the future');
+
+    expect($application->events()->count())->toBe(1);
+});

@@ -60,3 +60,15 @@ it('rejects a second application for the same posting', function (): void {
     $this->post("/postings/{$posting->id}/application", ['status' => 'applied'])
         ->assertSessionHasErrors(['job_posting_id' => 'This posting already has an application.']);
 });
+
+it('rejects an application date in the future', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-21 12:00:00'));
+    $posting = JobPosting::factory()->create();
+
+    $this->post("/postings/{$posting->id}/application", [
+        'status' => 'applied',
+        'occurred_at' => '2026-09-23T10:00:00.000Z',
+    ])->assertSessionHasErrors(['occurred_at' => 'The date cannot be in the future.']);
+
+    expect($posting->application()->exists())->toBeFalse();
+});

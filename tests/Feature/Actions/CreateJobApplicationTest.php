@@ -71,3 +71,18 @@ it('rejects a second application for the same posting', function (): void {
     expect(fn () => app(CreateJobApplication::class)->handle($posting))
         ->toThrow(ValidationException::class, 'already has an application');
 });
+
+it('rejects a date in the future, with a few minutes of tolerance', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-21 12:00:00'));
+
+    $apply = fn (string $occurredAt) => app(CreateJobApplication::class)->handle(
+        JobPosting::factory()->create(),
+        ApplicationStatus::Applied,
+        CarbonImmutable::parse($occurredAt),
+    );
+
+    expect(fn () => $apply('2026-09-21 12:06:00'))
+        ->toThrow(ValidationException::class, 'cannot be in the future');
+
+    expect($apply('2026-09-21 12:04:00')->status)->toBe(ApplicationStatus::Applied);
+});

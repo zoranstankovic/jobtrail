@@ -18,7 +18,11 @@ import {
 } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
 import { useEnums } from '@/composables/useEnums';
-import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates';
+import {
+    endOfTodayLocal,
+    fromDateTimeLocal,
+    toDateTimeLocal,
+} from '@/lib/dates';
 import { store as storeEvent } from '@/routes/events';
 import type { Application } from '@/types/models';
 import { useForm } from '@inertiajs/vue3';
@@ -103,6 +107,7 @@ function submit(): void {
                             id="change_occurred_at"
                             v-model="form.occurred_at"
                             type="datetime-local"
+                            :max="endOfTodayLocal()"
                         />
                     </FormField>
                     <FormField

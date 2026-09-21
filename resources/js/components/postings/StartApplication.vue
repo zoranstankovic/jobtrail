@@ -2,7 +2,11 @@
 import FormField from '@/components/FormField.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates';
+import {
+    endOfTodayLocal,
+    fromDateTimeLocal,
+    toDateTimeLocal,
+} from '@/lib/dates';
 import { store as storeApplication } from '@/routes/applications';
 import { useForm } from '@inertiajs/vue3';
 import { toast } from 'vue-sonner';
@@ -52,6 +56,7 @@ function start(status: 'saved' | 'applied'): void {
                 id="occurred_at"
                 v-model="form.occurred_at"
                 type="datetime-local"
+                :max="endOfTodayLocal()"
             />
         </FormField>
         <Button

@@ -101,3 +101,13 @@ it('leaves status and applied_at alone when the order does not change', function
 
     expectApplicationToBeConsistent($application);
 });
+
+it('rejects a date in the future', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-21 12:00:00'));
+    $event = createApplication(ApplicationStatus::Applied, '2026-09-01 10:00:00')->events()->sole();
+
+    expect(fn () => redate($event, '2026-09-23 10:00:00'))
+        ->toThrow(ValidationException::class, 'cannot be in the future');
+
+    expect($event->fresh()?->occurred_at->toDateTimeString())->toBe('2026-09-01 10:00:00');
+});

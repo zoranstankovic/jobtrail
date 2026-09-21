@@ -3,6 +3,7 @@
 namespace App\Actions;
 
 use App\Models\JobApplicationEvent;
+use App\Support\EventTime;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -15,6 +16,7 @@ final class UpdateApplicationEvent
 {
     public function handle(JobApplicationEvent $event, CarbonInterface $occurredAt, ?string $note): JobApplicationEvent
     {
+        EventTime::ensureNotInFuture($occurredAt);
         $this->ensureOrderIsKept($event, $occurredAt);
 
         return DB::transaction(function () use ($event, $occurredAt, $note): JobApplicationEvent {
