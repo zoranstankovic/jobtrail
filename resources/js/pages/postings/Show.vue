@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import DeleteButton from '@/components/DeleteButton.vue';
 import ApplicationPanel from '@/components/postings/ApplicationPanel.vue';
+import StartApplication from '@/components/postings/StartApplication.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useEnums } from '@/composables/useEnums';
@@ -121,9 +122,7 @@ const details = computed(() => [
                     v-if="application"
                     :application="application"
                 />
-                <p v-else class="text-muted-foreground text-sm">
-                    You have not applied yet.
-                </p>
+                <StartApplication v-else :posting-id="posting.id" />
             </aside>
         </div>
     </AppLayout>
