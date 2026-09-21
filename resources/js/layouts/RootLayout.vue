@@ -26,5 +26,6 @@ onUnmounted(stopListening);
 
 <template>
     <slot />
-    <Toaster position="top-right" />
+    <!-- Bottom right: at the top, toasts covered the header's actions. -->
+    <Toaster position="bottom-right" />
 </template>
