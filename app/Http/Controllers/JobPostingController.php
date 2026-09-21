@@ -35,6 +35,7 @@ class JobPostingController extends Controller
         return Inertia::render('postings/Index', [
             'postings' => $postings,
             'filters' => $filters,
+            'sources' => JobPosting::query()->distinct()->orderBy('source')->pluck('source'),
         ]);
     }
 }

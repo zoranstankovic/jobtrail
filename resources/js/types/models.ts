@@ -62,4 +62,7 @@ export type PostingListItem = {
 export type PostingFilters = {
     search: string | null;
     application: string | null;
+    work_mode: string | null;
+    seniority: string | null;
+    source: string | null;
 };

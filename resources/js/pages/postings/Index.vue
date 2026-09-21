@@ -30,6 +30,7 @@ import { Link } from '@inertiajs/vue3';
 defineProps<{
     postings: Paginated<PostingListItem>;
     filters: PostingFiltersValue;
+    sources: string[];
 }>();
 
 const { label } = useEnums();
@@ -38,7 +39,7 @@ const { label } = useEnums();
 <template>
     <AppLayout title="Job Postings">
         <div class="space-y-4">
-            <PostingFilters :filters="filters" />
+            <PostingFilters :filters="filters" :sources="sources" />
 
             <Empty
                 v-if="postings.data.length === 0"

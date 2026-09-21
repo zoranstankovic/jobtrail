@@ -128,6 +128,12 @@ class JobPosting extends Model
         } elseif ($application !== null) {
             $query->whereHas('application', fn (Builder $applications) => $applications->where('status', $application));
         }
+
+        foreach (['work_mode', 'seniority', 'source'] as $column) {
+            if (isset($filters[$column])) {
+                $query->where($column, $filters[$column]);
+            }
+        }
     }
 
     /**

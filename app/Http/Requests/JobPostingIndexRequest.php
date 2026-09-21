@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\Seniority;
+use App\Enums\WorkMode;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -23,6 +25,9 @@ class JobPostingIndexRequest extends FormRequest
                 'any',
                 ...array_map(fn (ApplicationStatus $status): string => $status->value, ApplicationStatus::cases()),
             ])],
+            'work_mode' => ['nullable', Rule::enum(WorkMode::class)],
+            'seniority' => ['nullable', Rule::enum(Seniority::class)],
+            'source' => ['nullable', 'string', 'max:50'],
         ];
     }
 
@@ -37,6 +42,9 @@ class JobPostingIndexRequest extends FormRequest
         return [
             'search' => $this->validated('search'),
             'application' => $this->validated('application'),
+            'work_mode' => $this->validated('work_mode'),
+            'seniority' => $this->validated('seniority'),
+            'source' => $this->validated('source'),
         ];
     }
 }

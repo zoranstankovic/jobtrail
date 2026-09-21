@@ -11,7 +11,7 @@ import { router } from '@inertiajs/vue3';
 import { watchDebounced } from '@vueuse/core';
 import { reactive, watch } from 'vue';
 
-const props = defineProps<{ filters: PostingFilters }>();
+const props = defineProps<{ filters: PostingFilters; sources: string[] }>();
 
 const { options } = useEnums();
 
@@ -19,6 +19,9 @@ const { options } = useEnums();
 const state = reactive({
     search: props.filters.search ?? '',
     application: props.filters.application ?? '',
+    work_mode: props.filters.work_mode ?? '',
+    seniority: props.filters.seniority ?? '',
+    source: props.filters.source ?? '',
 });
 
 function apply(): void {
@@ -34,7 +37,10 @@ function apply(): void {
 }
 
 watchDebounced(() => state.search, apply, { debounce: 300 });
-watch(() => [state.application], apply);
+watch(
+    () => [state.application, state.work_mode, state.seniority, state.source],
+    apply,
+);
 </script>
 
 <template>
@@ -56,6 +62,36 @@ watch(() => [state.application], apply);
                 :value="option.value"
             >
                 {{ option.label }}
+            </NativeSelectOption>
+        </NativeSelect>
+        <NativeSelect v-model="state.work_mode" aria-label="Work mode">
+            <NativeSelectOption value="">Any work mode</NativeSelectOption>
+            <NativeSelectOption
+                v-for="option in options('workMode')"
+                :key="option.value"
+                :value="option.value"
+            >
+                {{ option.label }}
+            </NativeSelectOption>
+        </NativeSelect>
+        <NativeSelect v-model="state.seniority" aria-label="Seniority">
+            <NativeSelectOption value="">Any seniority</NativeSelectOption>
+            <NativeSelectOption
+                v-for="option in options('seniority')"
+                :key="option.value"
+                :value="option.value"
+            >
+                {{ option.label }}
+            </NativeSelectOption>
+        </NativeSelect>
+        <NativeSelect v-model="state.source" aria-label="Source">
+            <NativeSelectOption value="">Any source</NativeSelectOption>
+            <NativeSelectOption
+                v-for="source in sources"
+                :key="source"
+                :value="source"
+            >
+                {{ source }}
             </NativeSelectOption>
         </NativeSelect>
     </div>
