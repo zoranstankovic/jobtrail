@@ -32,9 +32,10 @@ const sidebarOpen = computed(() => page.props.sidebarOpen !== false);
                     <slot name="actions" />
                 </div>
             </header>
-            <main class="flex-1 p-6">
+            <!-- SidebarInset already renders the page's <main>. -->
+            <div class="flex-1 p-6">
                 <slot />
-            </main>
+            </div>
         </SidebarInset>
     </SidebarProvider>
 </template>
