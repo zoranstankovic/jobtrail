@@ -29,6 +29,7 @@ class JobPostingIndexRequest extends FormRequest
             'seniority' => ['nullable', Rule::enum(Seniority::class)],
             'source' => ['nullable', 'string', 'max:50'],
             'skill' => ['nullable', 'string', 'max:100'],
+            'sort' => ['nullable', Rule::in(['created', 'posted'])],
         ];
     }
 
@@ -47,6 +48,7 @@ class JobPostingIndexRequest extends FormRequest
             'seniority' => $this->validated('seniority'),
             'source' => $this->validated('source'),
             'skill' => $this->validated('skill'),
+            'sort' => $this->validated('sort') ?? 'created',
         ];
     }
 }

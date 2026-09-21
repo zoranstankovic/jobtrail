@@ -103,3 +103,26 @@ it('offers every skill as a filter option', function (): void {
     $this->get('/postings')->assertInertia(fn (Assert $page) => $page
         ->where('skills', ['Laravel', 'vue']));
 });
+
+it('sorts by posted date with undated postings last', function (): void {
+    JobPosting::factory()->create(['title' => 'undated', 'posted_at' => null]);
+    JobPosting::factory()->create(['title' => 'older', 'posted_at' => '2026-09-01']);
+    JobPosting::factory()->create(['title' => 'newer', 'posted_at' => '2026-09-10']);
+
+    $this->get('/postings?sort=posted')->assertInertia(fn (Assert $page) => $page
+        ->where('filters.sort', 'posted')
+        ->where('postings.data', fn (Collection $postings) => $postings->pluck('title')->all() === ['newer', 'older', 'undated']));
+});
+
+it('sorts by created date by default', function (): void {
+    JobPosting::factory()->create(['title' => 'first', 'posted_at' => '2026-09-10']);
+    JobPosting::factory()->create(['title' => 'second', 'posted_at' => '2026-09-01']);
+
+    $this->get('/postings')->assertInertia(fn (Assert $page) => $page
+        ->where('filters.sort', 'created')
+        ->where('postings.data', fn (Collection $postings) => $postings->pluck('title')->all() === ['second', 'first']));
+});
+
+it('rejects an unknown sort', function (): void {
+    $this->get('/postings?sort=title')->assertSessionHasErrors('sort');
+});

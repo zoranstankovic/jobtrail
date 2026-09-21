@@ -27,11 +27,15 @@ const state = reactive({
     seniority: props.filters.seniority ?? '',
     source: props.filters.source ?? '',
     skill: props.filters.skill ?? '',
+    sort: props.filters.sort,
 });
 
 function apply(): void {
     const query = Object.fromEntries(
-        Object.entries(state).filter(([, value]) => value !== ''),
+        Object.entries(state).filter(
+            ([key, value]) =>
+                value !== '' && !(key === 'sort' && value === 'created'),
+        ),
     );
 
     router.get(indexPostings.url(), query, {
@@ -49,6 +53,7 @@ watch(
         state.seniority,
         state.source,
         state.skill,
+        state.sort,
     ],
     apply,
 );
@@ -113,6 +118,14 @@ watch(
                 :value="skill"
             >
                 {{ skill }}
+            </NativeSelectOption>
+        </NativeSelect>
+        <NativeSelect v-model="state.sort" aria-label="Sort" class="ml-auto">
+            <NativeSelectOption value="created">
+                Newest first
+            </NativeSelectOption>
+            <NativeSelectOption value="posted">
+                Recently posted
             </NativeSelectOption>
         </NativeSelect>
     </div>

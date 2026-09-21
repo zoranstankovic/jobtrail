@@ -17,8 +17,7 @@ class JobPostingController extends Controller
         $postings = JobPosting::query()
             ->filter($filters)
             ->with(['company', 'skills' => fn ($query) => $query->orderBy('name'), 'application'])
-            ->latest()
-            ->orderByDesc('id')
+            ->sorted($filters['sort'] ?? 'created')
             ->paginate(20)
             ->withQueryString()
             ->through(fn (JobPosting $posting): array => [

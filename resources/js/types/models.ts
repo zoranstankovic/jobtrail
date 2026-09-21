@@ -66,4 +66,5 @@ export type PostingFilters = {
     seniority: string | null;
     source: string | null;
     skill: string | null;
+    sort: 'created' | 'posted';
 };

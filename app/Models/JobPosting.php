@@ -141,6 +141,24 @@ class JobPosting extends Model
     }
 
     /**
+     * Orders the postings index: by posted date, or by created date, newest
+     * first either way (docs/design.md §6.1).
+     *
+     * @param  Builder<self>  $query
+     */
+    #[Scope]
+    protected function sorted(Builder $query, string $sort): void
+    {
+        if ($sort === 'posted') {
+            // PostgreSQL puts NULLs first in descending order; undated
+            // postings belong at the end.
+            $query->orderByRaw('posted_at desc nulls last');
+        }
+
+        $query->latest()->orderByDesc('id');
+    }
+
+    /**
      * Sources are stored trimmed and lowercase, so "LinkedIn" and "linkedin"
      * count as one source.
      *
