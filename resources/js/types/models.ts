@@ -61,4 +61,5 @@ export type PostingListItem = {
 /** The postings index filters, as the server echoes them back. */
 export type PostingFilters = {
     search: string | null;
+    application: string | null;
 };

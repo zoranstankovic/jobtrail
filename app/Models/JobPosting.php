@@ -118,6 +118,16 @@ class JobPosting extends Model
                 [self::SEARCH_CONFIG, $filters['search']],
             );
         }
+
+        $application = $filters['application'] ?? null;
+
+        if ($application === 'none') {
+            $query->whereDoesntHave('application');
+        } elseif ($application === 'any') {
+            $query->whereHas('application');
+        } elseif ($application !== null) {
+            $query->whereHas('application', fn (Builder $applications) => $applications->where('status', $application));
+        }
     }
 
     /**

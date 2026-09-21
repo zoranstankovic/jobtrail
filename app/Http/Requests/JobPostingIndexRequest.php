@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\ApplicationStatus;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Validates the postings index query string (docs/design.md §6.1).
@@ -16,6 +18,11 @@ class JobPostingIndexRequest extends FormRequest
     {
         return [
             'search' => ['nullable', 'string', 'max:255'],
+            'application' => ['nullable', Rule::in([
+                'none',
+                'any',
+                ...array_map(fn (ApplicationStatus $status): string => $status->value, ApplicationStatus::cases()),
+            ])],
         ];
     }
 
@@ -29,6 +36,7 @@ class JobPostingIndexRequest extends FormRequest
     {
         return [
             'search' => $this->validated('search'),
+            'application' => $this->validated('application'),
         ];
     }
 }

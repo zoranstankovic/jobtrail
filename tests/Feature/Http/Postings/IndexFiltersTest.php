@@ -1,5 +1,7 @@
 <?php
 
+use App\Actions\CreateJobApplication;
+use App\Enums\ApplicationStatus;
 use App\Models\JobPosting;
 use Illuminate\Support\Collection;
 use Inertia\Testing\AssertableInertia as Assert;
@@ -30,4 +32,24 @@ it('understands web search syntax', function (): void {
         ->where('postings.data', fn (Collection $postings) => $postings->pluck('title')->all() === [
             'Senior Laravel Developer',
         ]));
+});
+
+it('filters by application state', function (string $state, array $titles): void {
+    $notApplied = JobPosting::factory()->create(['title' => 'not applied']);
+    $saved = JobPosting::factory()->create(['title' => 'saved']);
+    $applied = JobPosting::factory()->create(['title' => 'applied']);
+    app(CreateJobApplication::class)->handle($saved, ApplicationStatus::Saved);
+    app(CreateJobApplication::class)->handle($applied, ApplicationStatus::Applied);
+
+    $this->get("/postings?application={$state}")->assertInertia(fn (Assert $page) => $page
+        ->where('filters.application', $state)
+        ->where('postings.data', fn (Collection $postings) => $postings->pluck('title')->all() === $titles));
+})->with([
+    'not applied' => ['none', ['not applied']],
+    'any application' => ['any', ['applied', 'saved']],
+    'a specific status' => ['saved', ['saved']],
+]);
+
+it('rejects an unknown application state', function (): void {
+    $this->get('/postings?application=bogus')->assertSessionHasErrors('application');
 });
