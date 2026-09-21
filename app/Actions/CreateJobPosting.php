@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 final class CreateJobPosting
 {
     public function __construct(
+        private readonly ResolveCompany $resolveCompany,
         private readonly ResolveSkills $resolveSkills,
         private readonly CreateJobApplication $createJobApplication,
     ) {}
@@ -33,7 +34,7 @@ final class CreateJobPosting
         ?CarbonInterface $appliedAt = null,
     ): JobPosting {
         return DB::transaction(function () use ($company, $attributes, $skillNames, $appliedAt): JobPosting {
-            $company = is_string($company) ? $this->findOrCreateCompany($company) : $company;
+            $company = is_string($company) ? $this->resolveCompany->handle($company) : $company;
 
             $posting = $company->jobPostings()->create($attributes);
 
@@ -45,13 +46,5 @@ final class CreateJobPosting
 
             return $posting;
         });
-    }
-
-    private function findOrCreateCompany(string $name): Company
-    {
-        $name = trim($name);
-
-        return Company::query()->whereRaw('lower(name) = lower(?)', [$name])->first()
-            ?? Company::query()->create(['name' => $name]);
     }
 }
