@@ -57,8 +57,8 @@ function submit(): void {
                 <DialogHeader>
                     <DialogTitle>Edit event</DialogTitle>
                     <DialogDescription>
-                        Correct the date or the note. If the date changes which
-                        event is the latest, the status follows.
+                        Correct the date or the note. The date must stay between
+                        the events before and after this one.
                     </DialogDescription>
                 </DialogHeader>
                 <FieldGroup>

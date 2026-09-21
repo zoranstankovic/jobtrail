@@ -268,12 +268,14 @@ All rules live in Action classes. Every multi-row write runs in a single DB tran
 2. **Change status** (`ChangeApplicationStatus`):
    - Any status can move to any other status.
    - Changing to the current status is rejected as a validation error.
+   - The new event cannot be dated before the latest event, so it always becomes the latest.
    - The action inserts the event and updates `job_applications.status`.
    - If the application has no `applied_at` and the new status is `applied`, `applied_at` is set to the event's `occurred_at`.
 3. **Edit event** (`UpdateApplicationEvent`):
    - Only `occurred_at` and `note` are editable.
    - `from_status` and `to_status` are immutable.
-   - If editing `occurred_at` changes which event is latest, or affects the earliest `applied` event, `status` and `applied_at` are recomputed from the events.
+   - The new `occurred_at` keeps the event's place in the timeline: not before the event it follows, not after the event that follows it. Equal times are allowed; ties keep their order by `id`. Otherwise the history could read "applied from saved" before "saved".
+   - Because the order never changes, the status stays the same. `applied_at` is recomputed when the earliest `applied` event moves.
 4. **Delete event** (`DeleteLatestApplicationEvent`):
    - Only the latest event can be deleted.
    - `status` reverts to that event's `from_status`, and `applied_at` is recomputed.
@@ -286,7 +288,7 @@ All rules live in Action classes. Every multi-row write runs in a single DB tran
 ### Error handling
 
 - **FormRequests** validate every input. This covers required fields, enum values, `salary_min <= salary_max`, URL format and uniqueness of URL and company name. Uniqueness is checked case-insensitively, so the user sees a friendly message instead of a DB error.
-- **Domain rule violations** from Actions (same-status change, deleting a non-latest event, deleting a posting that has an application, deleting a company that has postings) are raised as `ValidationException`. Inertia then shows them inline or as a toast.
+- **Domain rule violations** from Actions (same-status change, an event dated before the latest event or out of its place in the timeline, deleting a non-latest event, deleting a posting that has an application, deleting a company that has postings) are raised as `ValidationException`. Inertia then shows them inline or as a toast.
 - **DB constraints** are the last line of defense, not the primary validation.
 - Missing records return the standard 404.
 
