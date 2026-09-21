@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CreateJobPosting;
+use App\Actions\UpdateJobPosting;
 use App\Http\Requests\JobPostingIndexRequest;
+use App\Http\Requests\JobPostingRequest;
 use App\Http\Requests\StoreJobPostingRequest;
 use App\Models\Company;
 use App\Models\JobPosting;
@@ -68,6 +70,28 @@ class JobPostingController extends Controller
         return Inertia::render('postings/Show', [
             'posting' => $this->presentPosting($posting),
         ]);
+    }
+
+    public function edit(JobPosting $posting): Response
+    {
+        return Inertia::render('postings/Edit', [
+            'posting' => $this->presentPosting($posting),
+            ...$this->formOptions(),
+        ]);
+    }
+
+    public function update(JobPostingRequest $request, JobPosting $posting, UpdateJobPosting $updateJobPosting): RedirectResponse
+    {
+        $updateJobPosting->handle(
+            $posting,
+            $request->string('company')->value(),
+            $request->postingAttributes(),
+            $request->skillNames(),
+        );
+
+        $this->toast('Job posting updated.');
+
+        return to_route('postings.show', $posting);
     }
 
     /**

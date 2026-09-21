@@ -1,10 +1,12 @@
 <script setup lang="ts">
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { useEnums } from '@/composables/useEnums';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatCalendarDate, formatDate } from '@/lib/dates';
 import { formatSalary } from '@/lib/salary';
 import { show as showCompany } from '@/routes/companies';
+import { edit as editPosting } from '@/routes/postings';
 import type { Posting } from '@/types/models';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -40,6 +42,11 @@ const details = computed(() => [
 
 <template>
     <AppLayout :title="posting.title">
+        <template #actions>
+            <Button variant="outline" size="sm" as-child>
+                <Link :href="editPosting(posting.id)">Edit</Link>
+            </Button>
+        </template>
         <div class="grid gap-8 lg:grid-cols-3">
             <article class="space-y-6 lg:col-span-2">
                 <div class="space-y-1 text-sm">
