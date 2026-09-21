@@ -55,3 +55,12 @@ it('keeps the search vector out of serialized postings', function (): void {
 
     expect($posting->fresh()?->toArray())->not->toHaveKey('search_vector');
 });
+
+it('splits words joined by a slash', function (): void {
+    JobPosting::factory()->create(['title' => 'Full Stack Developer (Laravel/Vue)', 'description' => 'PHP and TypeScript/Vue.']);
+    JobPosting::factory()->create(['title' => 'Laravel Developer', 'description' => 'Backend work.']);
+
+    expect(searchPostings('vue'))->toBe(['Full Stack Developer (Laravel/Vue)'])
+        ->and(searchPostings('typescript'))->toBe(['Full Stack Developer (Laravel/Vue)'])
+        ->and(searchPostings('laravel -vue'))->toBe(['Laravel Developer']);
+});

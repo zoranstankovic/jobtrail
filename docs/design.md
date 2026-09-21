@@ -196,7 +196,7 @@ Additional constraints:
 
 `source` suggestions in the UI come from a fixed list merged with distinct values already in the table. New values are allowed.
 
-Full-text search uses the `simple` text search configuration. Postings mix English and German, so stemming for one language would mis-handle the other. The configuration name lives in one place so it can be changed later.
+Full-text search uses the `simple` text search configuration. Postings mix English and German, so stemming for one language would mis-handle the other. The configuration name lives in one place so it can be changed later. Slashes are replaced with spaces before indexing, because the parser reads `Laravel/Vue` as a single file-path token.
 
 ### 4.4 `skills` and `job_posting_skill`
 
