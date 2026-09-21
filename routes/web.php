@@ -24,6 +24,9 @@ Route::post('/applications/{application}/events', [ApplicationEventController::c
 Route::patch('/events/{event}', [ApplicationEventController::class, 'update'])
     ->name('events.update');
 
+Route::delete('/events/{event}', [ApplicationEventController::class, 'destroy'])
+    ->name('events.destroy');
+
 Route::get('/applications', fn () => Inertia::render('applications/Index'))
     ->name('applications.index');
 

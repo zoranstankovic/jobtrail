@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import DeleteButton from '@/components/DeleteButton.vue';
 import EditEventDialog from '@/components/postings/EditEventDialog.vue';
 import { useEnums } from '@/composables/useEnums';
 import { formatDateTime } from '@/lib/dates';
+import { destroy as destroyEvent } from '@/routes/events';
 import type { ApplicationEvent } from '@/types/models';
 
 defineProps<{ events: ApplicationEvent[] }>();
@@ -33,6 +35,13 @@ const { label } = useEnums();
             </p>
             <div class="mt-1 flex gap-1">
                 <EditEventDialog :event="event" />
+                <DeleteButton
+                    v-if="event.can_delete"
+                    :action="destroyEvent(event.id)"
+                    label="Undo"
+                    title="Undo this status change?"
+                    description="The event is deleted and the application goes back to its previous status."
+                />
             </div>
         </li>
     </ol>

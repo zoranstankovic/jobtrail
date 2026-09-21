@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ChangeApplicationStatus;
+use App\Actions\DeleteLatestApplicationEvent;
 use App\Actions\UpdateApplicationEvent;
 use App\Enums\ApplicationStatus;
 use App\Http\Requests\ChangeApplicationStatusRequest;
@@ -44,5 +45,19 @@ class ApplicationEventController extends Controller
         $this->toast('Event updated.');
 
         return to_route('postings.show', $event->jobApplication->job_posting_id);
+    }
+
+    public function destroy(
+        JobApplicationEvent $event,
+        DeleteLatestApplicationEvent $deleteLatestApplicationEvent,
+    ): RedirectResponse {
+        // Read before the delete: afterwards the event row is gone.
+        $postingId = $event->jobApplication->job_posting_id;
+
+        $deleteLatestApplicationEvent->handle($event);
+
+        $this->toast('Status change undone.');
+
+        return to_route('postings.show', $postingId);
     }
 }
