@@ -15,6 +15,9 @@ Route::resource('postings', JobPostingController::class);
 Route::post('/postings/{posting}/application', [JobApplicationController::class, 'store'])
     ->name('applications.store');
 
+Route::patch('/applications/{application}', [JobApplicationController::class, 'update'])
+    ->name('applications.update');
+
 Route::post('/applications/{application}/events', [ApplicationEventController::class, 'store'])
     ->name('events.store');
 
