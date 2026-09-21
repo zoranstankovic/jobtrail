@@ -9,6 +9,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { index as indexApplications } from '@/routes/applications';
+import { index as indexCompanies } from '@/routes/companies';
+import { index as indexPostings } from '@/routes/postings';
 import { Link, usePage } from '@inertiajs/vue3';
 import { Briefcase, Building2, Send } from '@lucide/vue';
 import { computed } from 'vue';
@@ -16,9 +19,9 @@ import { computed } from 'vue';
 const page = usePage();
 
 const items = [
-    { title: 'Job Postings', href: '/postings', icon: Briefcase },
-    { title: 'Applications', href: '/applications', icon: Send },
-    { title: 'Companies', href: '/companies', icon: Building2 },
+    { title: 'Job Postings', href: indexPostings.url(), icon: Briefcase },
+    { title: 'Applications', href: indexApplications.url(), icon: Send },
+    { title: 'Companies', href: indexCompanies.url(), icon: Building2 },
 ];
 
 const currentPath = computed(() => page.url.split('?')[0]);
