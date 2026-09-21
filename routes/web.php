@@ -21,6 +21,9 @@ Route::patch('/applications/{application}', [JobApplicationController::class, 'u
 Route::post('/applications/{application}/events', [ApplicationEventController::class, 'store'])
     ->name('events.store');
 
+Route::patch('/events/{event}', [ApplicationEventController::class, 'update'])
+    ->name('events.update');
+
 Route::get('/applications', fn () => Inertia::render('applications/Index'))
     ->name('applications.index');
 

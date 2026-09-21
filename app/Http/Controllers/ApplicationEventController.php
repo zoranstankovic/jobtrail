@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\ChangeApplicationStatus;
+use App\Actions\UpdateApplicationEvent;
 use App\Enums\ApplicationStatus;
 use App\Http\Requests\ChangeApplicationStatusRequest;
+use App\Http\Requests\UpdateApplicationEventRequest;
 use App\Models\JobApplication;
+use App\Models\JobApplicationEvent;
 use Illuminate\Http\RedirectResponse;
 
 /**
@@ -29,5 +32,17 @@ class ApplicationEventController extends Controller
         $this->toast('Status changed.');
 
         return to_route('postings.show', $application->job_posting_id);
+    }
+
+    public function update(
+        UpdateApplicationEventRequest $request,
+        JobApplicationEvent $event,
+        UpdateApplicationEvent $updateApplicationEvent,
+    ): RedirectResponse {
+        $updateApplicationEvent->handle($event, $request->occurredAt(), $request->validated('note'));
+
+        $this->toast('Event updated.');
+
+        return to_route('postings.show', $event->jobApplication->job_posting_id);
     }
 }

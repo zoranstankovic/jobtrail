@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import EditEventDialog from '@/components/postings/EditEventDialog.vue';
 import { useEnums } from '@/composables/useEnums';
 import { formatDateTime } from '@/lib/dates';
 import type { ApplicationEvent } from '@/types/models';
@@ -30,6 +31,9 @@ const { label } = useEnums();
             <p v-if="event.note" class="mt-1 text-sm whitespace-pre-line">
                 {{ event.note }}
             </p>
+            <div class="mt-1 flex gap-1">
+                <EditEventDialog :event="event" />
+            </div>
         </li>
     </ol>
 </template>
