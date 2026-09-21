@@ -3,14 +3,17 @@ import FormField from '@/components/FormField.vue';
 import CompanyInput from '@/components/postings/CompanyInput.vue';
 import SkillsInput from '@/components/postings/SkillsInput.vue';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
     NativeSelect,
     NativeSelectOption,
 } from '@/components/ui/native-select';
 import { Textarea } from '@/components/ui/textarea';
 import { useEnums } from '@/composables/useEnums';
+import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates';
 import type { PostingFormData } from '@/types/models';
 import type { RouteDefinition } from '@/wayfinder';
 import { useForm } from '@inertiajs/vue3';
@@ -22,14 +25,26 @@ const props = defineProps<{
     companies: string[];
     sources: string[];
     skills: string[];
+    withApplied?: boolean;
 }>();
 
 const { options } = useEnums();
 
 const form = useForm({ ...props.initial });
 
+function setAlreadyApplied(value: unknown): void {
+    form.already_applied = value === true;
+
+    if (form.already_applied && form.applied_at === '') {
+        form.applied_at = toDateTimeLocal();
+    }
+}
+
 function submit(): void {
-    form.submit(props.action);
+    form.transform((data) => ({
+        ...data,
+        applied_at: fromDateTimeLocal(data.applied_at),
+    })).submit(props.action);
 }
 </script>
 
@@ -233,6 +248,30 @@ function submit(): void {
                     placeholder="Paste the full job ad here."
                 />
             </FormField>
+
+            <div v-if="withApplied" class="space-y-3 rounded-md border p-4">
+                <div class="flex items-center gap-2">
+                    <Checkbox
+                        id="already_applied"
+                        :model-value="form.already_applied"
+                        @update:model-value="setAlreadyApplied"
+                    />
+                    <Label for="already_applied">I already applied</Label>
+                </div>
+                <FormField
+                    v-if="form.already_applied"
+                    id="applied_at"
+                    label="Applied on"
+                    :error="form.errors.applied_at"
+                >
+                    <Input
+                        id="applied_at"
+                        v-model="form.applied_at"
+                        type="datetime-local"
+                        class="w-fit"
+                    />
+                </FormField>
+            </div>
 
             <div>
                 <Button type="submit" :disabled="form.processing">

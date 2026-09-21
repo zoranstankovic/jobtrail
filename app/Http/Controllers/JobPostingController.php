@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Actions\CreateJobPosting;
 use App\Http\Requests\JobPostingIndexRequest;
-use App\Http\Requests\JobPostingRequest;
+use App\Http\Requests\StoreJobPostingRequest;
 use App\Models\Company;
 use App\Models\JobPosting;
 use App\Models\Skill;
@@ -49,12 +49,13 @@ class JobPostingController extends Controller
         return Inertia::render('postings/Create', $this->formOptions());
     }
 
-    public function store(JobPostingRequest $request, CreateJobPosting $createJobPosting): RedirectResponse
+    public function store(StoreJobPostingRequest $request, CreateJobPosting $createJobPosting): RedirectResponse
     {
         $posting = $createJobPosting->handle(
             $request->string('company')->value(),
             $request->postingAttributes(),
             $request->skillNames(),
+            $request->appliedAt(),
         );
 
         $this->toast('Job posting created.');

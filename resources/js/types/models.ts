@@ -107,4 +107,6 @@ export type PostingFormData = {
     posted_at: string;
     description: string;
     skills: string[];
+    already_applied: boolean;
+    applied_at: string;
 };

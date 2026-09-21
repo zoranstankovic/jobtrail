@@ -22,6 +22,8 @@ const initial: PostingFormData = {
     posted_at: '',
     description: '',
     skills: [],
+    already_applied: false,
+    applied_at: '',
 };
 </script>
 
@@ -34,6 +36,7 @@ const initial: PostingFormData = {
             :companies="companies"
             :sources="sources"
             :skills="skills"
+            with-applied
         />
     </AppLayout>
 </template>

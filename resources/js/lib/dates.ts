@@ -17,3 +17,24 @@ export function formatDate(iso: string | null): string {
 export function formatCalendarDate(iso: string | null): string {
     return iso === null ? '—' : calendarDateFormat.format(new Date(iso));
 }
+
+/**
+ * A value for <input type="datetime-local">: the wall-clock time in the
+ * browser's time zone, e.g. "2026-09-19T14:30".
+ */
+export function toDateTimeLocal(date: Date = new Date()): string {
+    const pad = (n: number): string => String(n).padStart(2, '0');
+
+    return (
+        `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}` +
+        `T${pad(date.getHours())}:${pad(date.getMinutes())}`
+    );
+}
+
+/**
+ * Converts a datetime-local value (local time) to ISO 8601 in UTC for the
+ * server; an empty input stays empty.
+ */
+export function fromDateTimeLocal(value: string): string | null {
+    return value === '' ? null : new Date(value).toISOString();
+}

@@ -1,9 +1,11 @@
 <?php
 
+use App\Enums\ApplicationStatus;
 use App\Enums\WorkMode;
 use App\Models\Company;
 use App\Models\JobPosting;
 use App\Models\Skill;
+use Carbon\CarbonImmutable;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('renders the create form with company and source suggestions', function (): void {
@@ -105,3 +107,39 @@ it('rejects invalid skills', function (mixed $skills): void {
     'not a list' => ['PHP'],
     'too long' => [[str_repeat('a', 101)]],
 ]);
+
+it('creates the application when "I already applied" is checked', function (): void {
+    $this->post('/postings', postingInput([
+        'already_applied' => true,
+        'applied_at' => '2026-09-05T08:30:00.000Z',
+    ]))->assertSessionHasNoErrors();
+
+    $application = JobPosting::query()->sole()->application;
+
+    expect($application?->status)->toBe(ApplicationStatus::Applied)
+        ->and($application?->applied_at?->toDateTimeString())->toBe('2026-09-05 08:30:00');
+
+    expectApplicationToBeConsistent($application);
+});
+
+it('dates the application now when no date is given', function (): void {
+    $this->travelTo(CarbonImmutable::parse('2026-09-19 10:00:00'));
+
+    $this->post('/postings', postingInput(['already_applied' => true, 'applied_at' => null]));
+
+    expect(JobPosting::query()->sole()->application?->applied_at?->toDateTimeString())
+        ->toBe('2026-09-19 10:00:00');
+});
+
+it('creates no application when the box is not checked', function (): void {
+    $this->post('/postings', postingInput(['already_applied' => false, 'applied_at' => '2026-09-05T08:30:00.000Z']));
+
+    expect(JobPosting::query()->sole()->application)->toBeNull();
+});
+
+it('rejects an invalid application date', function (): void {
+    $this->post('/postings', postingInput(['already_applied' => true, 'applied_at' => 'not a date']))
+        ->assertSessionHasErrors('applied_at');
+
+    expect(JobPosting::query()->count())->toBe(0);
+});
