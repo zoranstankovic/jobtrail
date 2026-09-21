@@ -9,13 +9,26 @@ import {
 } from '@/lib/dates';
 import { store as storeApplication } from '@/routes/applications';
 import { useForm } from '@inertiajs/vue3';
+import { useTemplateRef } from 'vue';
 import { toast } from 'vue-sonner';
 
 const props = defineProps<{ postingId: number }>();
 
 const form = useForm({ status: 'applied', occurred_at: toDateTimeLocal() });
 
+// There is no <form> here (see start()), so the browser does not check the
+// input's constraints, such as max, by itself.
+const dateInput = useTemplateRef<InstanceType<typeof Input>>('dateInput');
+
 function start(status: 'saved' | 'applied'): void {
+    // Only "Mark as applied" sends the date, so only it is blocked by an
+    // invalid one; reportValidity() shows the browser's own message.
+    const input = dateInput.value?.$el as HTMLInputElement | undefined;
+
+    if (status === 'applied' && input?.reportValidity() === false) {
+        return;
+    }
+
     form.status = status;
 
     form.transform((data) => ({
@@ -54,6 +67,7 @@ function start(status: 'saved' | 'applied'): void {
         >
             <Input
                 id="occurred_at"
+                ref="dateInput"
                 v-model="form.occurred_at"
                 type="datetime-local"
                 :max="endOfTodayLocal()"
