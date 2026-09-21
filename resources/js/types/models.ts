@@ -84,6 +84,7 @@ export type Posting = {
     salary_currency: string;
     salary_period: string | null;
     description: string | null;
+    /** A calendar date, "YYYY-MM-DD". */
     posted_at: string | null;
     created_at: string;
     company: { id: number; name: string };

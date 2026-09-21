@@ -132,9 +132,11 @@ class JobPostingController extends Controller
                 'salary_currency',
                 'salary_period',
                 'description',
-                'posted_at',
                 'created_at',
             ]),
+            // only() returns the Carbon value, which would serialize as a
+            // full timestamp; the date input and the page want "YYYY-MM-DD".
+            'posted_at' => $posting->posted_at?->toDateString(),
             'company' => ['id' => $posting->company->id, 'name' => $posting->company->name],
             'skills' => $posting->skills()->orderByRaw('lower(name)')->pluck('name'),
         ];

@@ -21,8 +21,9 @@ export function formatDateTime(iso: string | null): string {
 }
 
 /**
- * A calendar date such as posted_at, stored as midnight UTC. Printed in UTC,
- * so it never moves to the previous day west of Greenwich.
+ * A calendar date such as posted_at ("2026-09-01"). JavaScript reads a
+ * date-only string as midnight UTC, so it is printed in UTC and never moves
+ * to the previous day west of Greenwich.
  */
 export function formatCalendarDate(iso: string | null): string {
     return iso === null ? '—' : calendarDateFormat.format(new Date(iso));

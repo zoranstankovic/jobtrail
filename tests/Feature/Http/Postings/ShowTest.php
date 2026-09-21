@@ -52,7 +52,7 @@ it('shows every field of a posting', function (): void {
                 'salary_currency' => 'EUR',
                 'salary_period' => 'yearly',
                 'description' => "Line one\nLine two",
-                'posted_at' => '2026-09-01T00:00:00.000000Z',
+                'posted_at' => '2026-09-01',
                 'created_at' => '2026-09-10T12:00:00.000000Z',
                 'company' => ['id' => $company->id, 'name' => 'Acme GmbH'],
                 'skills' => ['Laravel', 'vue'],

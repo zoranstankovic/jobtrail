@@ -185,7 +185,7 @@ A posting without an application means "not applied". No separate flag exists.
 | `salary_period` | varchar | nullable; CHECK in `yearly`, `monthly`, `hourly` |
 | `description` | text | nullable; plain text, line breaks preserved |
 | `raw_payload` | jsonb | nullable; original API response (Phase 2) |
-| `posted_at` | timestamptz | nullable |
+| `posted_at` | date | nullable; the day the ad was published (no time of day) |
 | `search_vector` | tsvector | generated, stored: weighted `title` (A) + `description` (B); GIN index |
 | `created_at`, `updated_at` | timestamptz | |
 

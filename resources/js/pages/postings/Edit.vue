@@ -24,8 +24,7 @@ const initial: PostingFormData = {
     salary_max: props.posting.salary_max?.toString() ?? '',
     salary_currency: props.posting.salary_currency,
     salary_period: props.posting.salary_period ?? '',
-    // The date input wants "YYYY-MM-DD"; posted_at is midnight UTC.
-    posted_at: props.posting.posted_at?.slice(0, 10) ?? '',
+    posted_at: props.posting.posted_at ?? '',
     description: props.posting.description ?? '',
     skills: [...props.posting.skills],
     already_applied: false,

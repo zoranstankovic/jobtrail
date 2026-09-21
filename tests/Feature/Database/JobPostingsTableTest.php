@@ -93,3 +93,10 @@ it('refuses to delete a company that still has postings', function (): void {
     expect(fn () => $posting->company->delete())
         ->toThrow(QueryException::class, 'job_postings_company_id_foreign');
 });
+
+it('stores posted_at as a calendar date without a time of day', function (): void {
+    $posting = JobPosting::factory()->create(['posted_at' => '2026-09-14 15:12:00']);
+
+    expect(DB::table('job_postings')->where('id', $posting->id)->value('posted_at'))->toBe('2026-09-14')
+        ->and($posting->fresh()?->posted_at?->toDateTimeString())->toBe('2026-09-14 00:00:00');
+});

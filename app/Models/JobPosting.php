@@ -220,7 +220,7 @@ class JobPosting extends Model
             'salary_max' => 'integer',
             'salary_period' => SalaryPeriod::class,
             'raw_payload' => 'array',
-            'posted_at' => 'immutable_datetime',
+            'posted_at' => 'immutable_date',
         ];
     }
 }
