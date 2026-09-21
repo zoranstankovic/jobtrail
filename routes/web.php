@@ -18,6 +18,9 @@ Route::post('/postings/{posting}/application', [JobApplicationController::class,
 Route::patch('/applications/{application}', [JobApplicationController::class, 'update'])
     ->name('applications.update');
 
+Route::delete('/applications/{application}', [JobApplicationController::class, 'destroy'])
+    ->name('applications.destroy');
+
 Route::post('/applications/{application}/events', [ApplicationEventController::class, 'store'])
     ->name('events.store');
 

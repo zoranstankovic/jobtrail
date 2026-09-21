@@ -34,4 +34,14 @@ class JobApplicationController extends Controller
 
         return to_route('postings.show', $application->job_posting_id);
     }
+
+    public function destroy(JobApplication $application): RedirectResponse
+    {
+        // The events go with it: ON DELETE CASCADE (docs/design.md §5.5).
+        $application->delete();
+
+        $this->toast('Application deleted.');
+
+        return to_route('postings.show', $application->job_posting_id);
+    }
 }
