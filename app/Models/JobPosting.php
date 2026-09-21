@@ -134,6 +134,10 @@ class JobPosting extends Model
                 $query->where($column, $filters[$column]);
             }
         }
+
+        if (isset($filters['skill'])) {
+            $query->whereHas('skills', fn (Builder $skills) => $skills->whereRaw('lower(name) = lower(?)', [$filters['skill']]));
+        }
     }
 
     /**

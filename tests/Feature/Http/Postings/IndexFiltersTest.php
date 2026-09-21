@@ -5,6 +5,7 @@ use App\Enums\ApplicationStatus;
 use App\Enums\Seniority;
 use App\Enums\WorkMode;
 use App\Models\JobPosting;
+use App\Models\Skill;
 use Illuminate\Support\Collection;
 use Inertia\Testing\AssertableInertia as Assert;
 
@@ -81,4 +82,24 @@ it('offers the sources in use as filter options', function (): void {
 
 it('rejects an unknown work mode', function (): void {
     $this->get('/postings?work_mode=bogus')->assertSessionHasErrors('work_mode');
+});
+
+it('filters by skill, case-insensitively', function (): void {
+    $laravel = Skill::factory()->create(['name' => 'Laravel']);
+    $vue = Skill::factory()->create(['name' => 'Vue']);
+    JobPosting::factory()->create(['title' => 'both'])->skills()->attach([$laravel->id, $vue->id]);
+    JobPosting::factory()->create(['title' => 'vue only'])->skills()->attach([$vue->id]);
+    JobPosting::factory()->create(['title' => 'none']);
+
+    $this->get('/postings?skill=laravel')->assertInertia(fn (Assert $page) => $page
+        ->where('filters.skill', 'laravel')
+        ->where('postings.data', fn (Collection $postings) => $postings->pluck('title')->all() === ['both']));
+});
+
+it('offers every skill as a filter option', function (): void {
+    Skill::factory()->create(['name' => 'vue']);
+    Skill::factory()->create(['name' => 'Laravel']);
+
+    $this->get('/postings')->assertInertia(fn (Assert $page) => $page
+        ->where('skills', ['Laravel', 'vue']));
 });

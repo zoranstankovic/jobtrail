@@ -11,7 +11,11 @@ import { router } from '@inertiajs/vue3';
 import { watchDebounced } from '@vueuse/core';
 import { reactive, watch } from 'vue';
 
-const props = defineProps<{ filters: PostingFilters; sources: string[] }>();
+const props = defineProps<{
+    filters: PostingFilters;
+    sources: string[];
+    skills: string[];
+}>();
 
 const { options } = useEnums();
 
@@ -22,6 +26,7 @@ const state = reactive({
     work_mode: props.filters.work_mode ?? '',
     seniority: props.filters.seniority ?? '',
     source: props.filters.source ?? '',
+    skill: props.filters.skill ?? '',
 });
 
 function apply(): void {
@@ -38,7 +43,13 @@ function apply(): void {
 
 watchDebounced(() => state.search, apply, { debounce: 300 });
 watch(
-    () => [state.application, state.work_mode, state.seniority, state.source],
+    () => [
+        state.application,
+        state.work_mode,
+        state.seniority,
+        state.source,
+        state.skill,
+    ],
     apply,
 );
 </script>
@@ -92,6 +103,16 @@ watch(
                 :value="source"
             >
                 {{ source }}
+            </NativeSelectOption>
+        </NativeSelect>
+        <NativeSelect v-model="state.skill" aria-label="Skill">
+            <NativeSelectOption value="">Any skill</NativeSelectOption>
+            <NativeSelectOption
+                v-for="skill in skills"
+                :key="skill"
+                :value="skill"
+            >
+                {{ skill }}
             </NativeSelectOption>
         </NativeSelect>
     </div>

@@ -65,4 +65,5 @@ export type PostingFilters = {
     work_mode: string | null;
     seniority: string | null;
     source: string | null;
+    skill: string | null;
 };

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobPostingIndexRequest;
 use App\Models\JobPosting;
+use App\Models\Skill;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -36,6 +37,7 @@ class JobPostingController extends Controller
             'postings' => $postings,
             'filters' => $filters,
             'sources' => JobPosting::query()->distinct()->orderBy('source')->pluck('source'),
+            'skills' => Skill::query()->orderByRaw('lower(name)')->pluck('name'),
         ]);
     }
 }

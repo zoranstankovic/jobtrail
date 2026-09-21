@@ -31,6 +31,7 @@ defineProps<{
     postings: Paginated<PostingListItem>;
     filters: PostingFiltersValue;
     sources: string[];
+    skills: string[];
 }>();
 
 const { label } = useEnums();
@@ -39,7 +40,11 @@ const { label } = useEnums();
 <template>
     <AppLayout title="Job Postings">
         <div class="space-y-4">
-            <PostingFilters :filters="filters" :sources="sources" />
+            <PostingFilters
+                :filters="filters"
+                :sources="sources"
+                :skills="skills"
+            />
 
             <Empty
                 v-if="postings.data.length === 0"
