@@ -110,3 +110,22 @@ export type PostingFormData = {
     already_applied: boolean;
     applied_at: string;
 };
+
+/** One status change of an application (JobPostingController::presentApplication). */
+export type ApplicationEvent = {
+    id: number;
+    from_status: string | null;
+    to_status: string;
+    occurred_at: string;
+    note: string | null;
+    can_delete: boolean;
+};
+
+/** An application as the posting detail page shows it. */
+export type Application = {
+    id: number;
+    status: string;
+    applied_at: string | null;
+    notes: string | null;
+    events: ApplicationEvent[];
+};

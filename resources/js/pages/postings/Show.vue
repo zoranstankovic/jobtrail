@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import DeleteButton from '@/components/DeleteButton.vue';
+import ApplicationPanel from '@/components/postings/ApplicationPanel.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useEnums } from '@/composables/useEnums';
@@ -11,11 +12,14 @@ import {
     destroy as destroyPosting,
     edit as editPosting,
 } from '@/routes/postings';
-import type { Posting } from '@/types/models';
+import type { Application, Posting } from '@/types/models';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
 
-const props = defineProps<{ posting: Posting }>();
+const props = defineProps<{
+    posting: Posting;
+    application: Application | null;
+}>();
 
 const { label } = useEnums();
 
@@ -110,6 +114,17 @@ const details = computed(() => [
                     </p>
                 </section>
             </article>
+
+            <aside class="space-y-4 rounded-lg border p-4 lg:self-start">
+                <h2 class="text-base font-medium">Application</h2>
+                <ApplicationPanel
+                    v-if="application"
+                    :application="application"
+                />
+                <p v-else class="text-muted-foreground text-sm">
+                    You have not applied yet.
+                </p>
+            </aside>
         </div>
     </AppLayout>
 </template>

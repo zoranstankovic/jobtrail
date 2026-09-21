@@ -9,6 +9,8 @@ use App\Http\Requests\JobPostingIndexRequest;
 use App\Http\Requests\JobPostingRequest;
 use App\Http\Requests\StoreJobPostingRequest;
 use App\Models\Company;
+use App\Models\JobApplication;
+use App\Models\JobApplicationEvent;
 use App\Models\JobPosting;
 use App\Models\Skill;
 use Illuminate\Http\RedirectResponse;
@@ -70,6 +72,9 @@ class JobPostingController extends Controller
     {
         return Inertia::render('postings/Show', [
             'posting' => $this->presentPosting($posting),
+            'application' => $posting->application === null
+                ? null
+                : $this->presentApplication($posting->application),
         ]);
     }
 
@@ -132,6 +137,38 @@ class JobPostingController extends Controller
             ]),
             'company' => ['id' => $posting->company->id, 'name' => $posting->company->name],
             'skills' => $posting->skills()->orderByRaw('lower(name)')->pluck('name'),
+        ];
+    }
+
+    /**
+     * The application panel's data: status, notes and the timeline, newest
+     * first, with the latest non-creation event marked as deletable
+     * (docs/design.md §5.4, §6.3).
+     *
+     * @return array<string, mixed>
+     */
+    private function presentApplication(JobApplication $application): array
+    {
+        $events = $application->events()
+            ->orderByDesc('occurred_at')
+            ->orderByDesc('id')
+            ->get();
+
+        $latestId = $events->first()?->id;
+
+        return [
+            'id' => $application->id,
+            'status' => $application->status,
+            'applied_at' => $application->applied_at,
+            'notes' => $application->notes,
+            'events' => $events->map(fn (JobApplicationEvent $event): array => [
+                'id' => $event->id,
+                'from_status' => $event->from_status,
+                'to_status' => $event->to_status,
+                'occurred_at' => $event->occurred_at,
+                'note' => $event->note,
+                'can_delete' => $event->id === $latestId && $event->from_status !== null,
+            ]),
         ];
     }
 
