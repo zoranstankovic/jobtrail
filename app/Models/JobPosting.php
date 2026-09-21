@@ -75,6 +75,22 @@ class JobPosting extends Model
     public const SEARCH_CONFIG = 'simple';
 
     /**
+     * Where ads are commonly published; offered as suggestions next to the
+     * sources already in use (docs/design.md §4.3).
+     *
+     * @var list<string>
+     */
+    public const SOURCE_SUGGESTIONS = [
+        'linkedin',
+        'stepstone',
+        'xing',
+        'indeed',
+        'company_website',
+        'referral',
+        'arbeitnow',
+    ];
+
+    /**
      * @return BelongsTo<Company, $this>
      */
     public function company(): BelongsTo
@@ -156,6 +172,24 @@ class JobPosting extends Model
         }
 
         $query->latest()->orderByDesc('id');
+    }
+
+    /**
+     * The fixed suggestions merged with the sources already in use, sorted.
+     * New values stay allowed; these are only suggestions.
+     *
+     * @return array<int, string>
+     */
+    public static function sourceSuggestions(): array
+    {
+        return self::query()
+            ->distinct()
+            ->pluck('source')
+            ->merge(self::SOURCE_SUGGESTIONS)
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
     }
 
     /**

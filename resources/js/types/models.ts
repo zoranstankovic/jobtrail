@@ -89,3 +89,21 @@ export type Posting = {
     company: { id: number; name: string };
     skills: string[];
 };
+
+/** The posting form's fields; every value is a string, as inputs produce. */
+export type PostingFormData = {
+    company: string;
+    title: string;
+    url: string;
+    source: string;
+    location: string;
+    work_mode: string;
+    employment_type: string;
+    seniority: string;
+    salary_min: string;
+    salary_max: string;
+    salary_currency: string;
+    salary_period: string;
+    posted_at: string;
+    description: string;
+};

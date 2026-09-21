@@ -85,3 +85,30 @@ function createApplication(
         CarbonImmutable::parse($occurredAt),
     );
 }
+
+/**
+ * A valid posting form submission; override single fields per test.
+ *
+ * @param  array<string, mixed>  $overrides
+ * @return array<string, mixed>
+ */
+function postingInput(array $overrides = []): array
+{
+    return [
+        'company' => 'Acme GmbH',
+        'title' => 'Senior Laravel Developer',
+        'url' => 'https://jobs.example/laravel',
+        'source' => 'linkedin',
+        'location' => 'Berlin',
+        'work_mode' => 'hybrid',
+        'employment_type' => 'full_time',
+        'seniority' => 'senior',
+        'salary_min' => 60000,
+        'salary_max' => 75000,
+        'salary_currency' => 'EUR',
+        'salary_period' => 'yearly',
+        'description' => "First line\nSecond line",
+        'posted_at' => '2026-09-01',
+        ...$overrides,
+    ];
+}

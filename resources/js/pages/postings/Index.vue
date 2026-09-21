@@ -3,8 +3,10 @@ import Pager from '@/components/Pager.vue';
 import PostingFilters from '@/components/postings/PostingFilters.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import {
     Empty,
+    EmptyContent,
     EmptyDescription,
     EmptyHeader,
     EmptyTitle,
@@ -20,7 +22,10 @@ import {
 import { useEnums } from '@/composables/useEnums';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { show as showCompany } from '@/routes/companies';
-import { show as showPosting } from '@/routes/postings';
+import {
+    create as createPosting,
+    show as showPosting,
+} from '@/routes/postings';
 import type {
     Paginated,
     PostingFilters as PostingFiltersValue,
@@ -40,6 +45,12 @@ const { label } = useEnums();
 
 <template>
     <AppLayout title="Job Postings">
+        <template #actions>
+            <Button size="sm" as-child>
+                <Link :href="createPosting()">New posting</Link>
+            </Button>
+        </template>
+
         <div class="space-y-4">
             <PostingFilters
                 :filters="filters"
@@ -57,6 +68,11 @@ const { label } = useEnums();
                         Add a posting, or change the filters.
                     </EmptyDescription>
                 </EmptyHeader>
+                <EmptyContent>
+                    <Button as-child>
+                        <Link :href="createPosting()">New posting</Link>
+                    </Button>
+                </EmptyContent>
             </Empty>
 
             <Table v-else>
