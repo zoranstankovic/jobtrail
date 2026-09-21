@@ -10,6 +10,8 @@ use Carbon\CarbonImmutable;
 use Database\Factories\JobPostingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
+use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -96,6 +98,26 @@ class JobPosting extends Model
     public function application(): HasOne
     {
         return $this->hasOne(JobApplication::class);
+    }
+
+    /**
+     * Narrows the postings index to the active filters (docs/design.md §6.1).
+     * A missing or null key means "no filter".
+     *
+     * @param  Builder<self>  $query
+     * @param  array<string, string|null>  $filters
+     */
+    #[Scope]
+    protected function filter(Builder $query, array $filters): void
+    {
+        if (isset($filters['search'])) {
+            // websearch_to_tsquery accepts search-box syntax ("phrases",
+            // -exclusions, or) and never fails on odd input.
+            $query->whereRaw(
+                'search_vector @@ websearch_to_tsquery(?::regconfig, ?)',
+                [self::SEARCH_CONFIG, $filters['search']],
+            );
+        }
     }
 
     /**

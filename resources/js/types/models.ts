@@ -57,3 +57,8 @@ export type PostingListItem = {
     source: string;
     status: string | null;
 };
+
+/** The postings index filters, as the server echoes them back. */
+export type PostingFilters = {
+    search: string | null;
+};

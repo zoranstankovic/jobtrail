@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\JobPostingIndexRequest;
 use App\Models\JobPosting;
 use Inertia\Inertia;
 use Inertia\Response;
 
 class JobPostingController extends Controller
 {
-    public function index(): Response
+    public function index(JobPostingIndexRequest $request): Response
     {
+        $filters = $request->filters();
+
         $postings = JobPosting::query()
+            ->filter($filters)
             ->with(['company', 'skills' => fn ($query) => $query->orderBy('name'), 'application'])
             ->latest()
             ->orderByDesc('id')
@@ -30,6 +34,7 @@ class JobPostingController extends Controller
 
         return Inertia::render('postings/Index', [
             'postings' => $postings,
+            'filters' => $filters,
         ]);
     }
 }

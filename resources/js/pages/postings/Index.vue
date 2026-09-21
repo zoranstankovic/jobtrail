@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import Pager from '@/components/Pager.vue';
+import PostingFilters from '@/components/postings/PostingFilters.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { Badge } from '@/components/ui/badge';
 import {
@@ -19,10 +20,17 @@ import {
 import { useEnums } from '@/composables/useEnums';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { show as showCompany } from '@/routes/companies';
-import type { Paginated, PostingListItem } from '@/types/models';
+import type {
+    Paginated,
+    PostingFilters as PostingFiltersValue,
+    PostingListItem,
+} from '@/types/models';
 import { Link } from '@inertiajs/vue3';
 
-defineProps<{ postings: Paginated<PostingListItem> }>();
+defineProps<{
+    postings: Paginated<PostingListItem>;
+    filters: PostingFiltersValue;
+}>();
 
 const { label } = useEnums();
 </script>
@@ -30,6 +38,8 @@ const { label } = useEnums();
 <template>
     <AppLayout title="Job Postings">
         <div class="space-y-4">
+            <PostingFilters :filters="filters" />
+
             <Empty
                 v-if="postings.data.length === 0"
                 class="border border-dashed"
