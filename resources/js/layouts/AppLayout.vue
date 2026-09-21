@@ -22,7 +22,9 @@ const sidebarOpen = computed(() => page.props.sidebarOpen !== false);
 
     <SidebarProvider :default-open="sidebarOpen">
         <AppSidebar />
-        <SidebarInset>
+        <!-- min-w-0: a flex item is at least as wide as its content by
+             default, so a wide table would widen the whole page. -->
+        <SidebarInset class="min-w-0">
             <header class="flex h-14 shrink-0 items-center gap-2 border-b px-4">
                 <SidebarTrigger />
                 <h1 class="text-sm font-medium">{{ title }}</h1>
