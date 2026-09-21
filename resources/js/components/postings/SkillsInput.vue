@@ -32,6 +32,7 @@ function update(values: unknown[]): void {
             <TagsInputInput
                 :id="id"
                 list="skill-suggestions"
+                maxlength="100"
                 placeholder="Type a skill and press Enter"
             />
         </TagsInput>

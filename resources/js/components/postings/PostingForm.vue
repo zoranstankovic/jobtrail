@@ -17,6 +17,7 @@ import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates';
 import type { PostingFormData } from '@/types/models';
 import type { RouteDefinition } from '@/wayfinder';
 import { useForm } from '@inertiajs/vue3';
+import { computed } from 'vue';
 
 const props = defineProps<{
     initial: PostingFormData;
@@ -31,6 +32,15 @@ const props = defineProps<{
 const { options } = useEnums();
 
 const form = useForm({ ...props.initial });
+
+// Laravel reports a bad skill under its index ("skills.2"), not "skills".
+const skillsError = computed(
+    () =>
+        form.errors.skills ??
+        Object.entries(form.errors).find(([key]) =>
+            key.startsWith('skills.'),
+        )?.[1],
+);
 
 function setAlreadyApplied(value: unknown): void {
     form.already_applied = value === true;
@@ -228,7 +238,7 @@ function submit(): void {
                 </FormField>
             </div>
 
-            <FormField id="skills" label="Skills" :error="form.errors.skills">
+            <FormField id="skills" label="Skills" :error="skillsError">
                 <SkillsInput
                     id="skills"
                     v-model="form.skills"

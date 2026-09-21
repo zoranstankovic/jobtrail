@@ -143,3 +143,12 @@ it('rejects an invalid application date', function (): void {
 
     expect(JobPosting::query()->count())->toBe(0);
 });
+
+it('reports a skill that is too long under its own key, named "skill"', function (): void {
+    $this->post('/postings', postingInput(['skills' => ['PHP', str_repeat('a', 101)]]))
+        ->assertSessionHasErrors([
+            'skills.1' => 'The skill field must not be greater than 100 characters.',
+        ]);
+
+    expect(JobPosting::query()->count())->toBe(0);
+});

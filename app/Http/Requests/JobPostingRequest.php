@@ -62,6 +62,19 @@ class JobPostingRequest extends FormRequest
     }
 
     /**
+     * Names used in messages: a bad skill is reported under its index
+     * ("skills.1"), which should read as "skill".
+     *
+     * @return array<string, string>
+     */
+    public function attributes(): array
+    {
+        return [
+            'skills.*' => 'skill',
+        ];
+    }
+
+    /**
      * The posting's own columns, ready for JobPosting::fill(). The company,
      * skills and "already applied" fields are handled separately.
      *
