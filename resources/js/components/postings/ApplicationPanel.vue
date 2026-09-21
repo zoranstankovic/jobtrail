@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import ApplicationTimeline from '@/components/postings/ApplicationTimeline.vue';
+import ChangeStatusDialog from '@/components/postings/ChangeStatusDialog.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
 import { formatDate } from '@/lib/dates';
 import type { Application } from '@/types/models';
@@ -11,6 +12,7 @@ defineProps<{ application: Application }>();
     <div class="space-y-6">
         <div class="flex flex-wrap items-center justify-between gap-2">
             <StatusBadge :status="application.status" />
+            <ChangeStatusDialog :application="application" />
         </div>
         <p class="text-muted-foreground text-sm">
             Applied on {{ formatDate(application.applied_at) }}

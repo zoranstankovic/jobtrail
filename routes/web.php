@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationEventController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobPostingController;
@@ -13,6 +14,9 @@ Route::resource('postings', JobPostingController::class);
 
 Route::post('/postings/{posting}/application', [JobApplicationController::class, 'store'])
     ->name('applications.store');
+
+Route::post('/applications/{application}/events', [ApplicationEventController::class, 'store'])
+    ->name('events.store');
 
 Route::get('/applications', fn () => Inertia::render('applications/Index'))
     ->name('applications.index');
