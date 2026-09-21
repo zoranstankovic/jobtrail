@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FormField from '@/components/FormField.vue';
 import CompanyInput from '@/components/postings/CompanyInput.vue';
+import SkillsInput from '@/components/postings/SkillsInput.vue';
 import { Button } from '@/components/ui/button';
 import { FieldGroup } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -20,6 +21,7 @@ const props = defineProps<{
     submitLabel: string;
     companies: string[];
     sources: string[];
+    skills: string[];
 }>();
 
 const { options } = useEnums();
@@ -210,6 +212,14 @@ function submit(): void {
                     </NativeSelect>
                 </FormField>
             </div>
+
+            <FormField id="skills" label="Skills" :error="form.errors.skills">
+                <SkillsInput
+                    id="skills"
+                    v-model="form.skills"
+                    :suggestions="skills"
+                />
+            </FormField>
 
             <FormField
                 id="description"

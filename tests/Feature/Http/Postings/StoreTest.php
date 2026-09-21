@@ -3,6 +3,7 @@
 use App\Enums\WorkMode;
 use App\Models\Company;
 use App\Models\JobPosting;
+use App\Models\Skill;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('renders the create form with company and source suggestions', function (): void {
@@ -76,3 +77,31 @@ it('rejects a URL another posting has, ignoring case', function (): void {
     $this->post('/postings', postingInput(['url' => 'https://jobs.example/LARAVEL']))
         ->assertSessionHasErrors(['url' => 'The url has already been taken.']);
 });
+
+it('attaches new and existing skills, matching existing ones case-insensitively', function (): void {
+    Skill::factory()->create(['name' => 'PostgreSQL']);
+
+    $this->post('/postings', postingInput(['skills' => ['postgresql', 'Rust']]))
+        ->assertSessionHasNoErrors();
+
+    expect(JobPosting::query()->sole()->skills()->orderBy('name')->pluck('name')->all())
+        ->toBe(['PostgreSQL', 'Rust'])
+        ->and(Skill::query()->count())->toBe(2);
+});
+
+it('offers the existing skills in the create form', function (): void {
+    Skill::factory()->create(['name' => 'vue']);
+    Skill::factory()->create(['name' => 'Laravel']);
+
+    $this->get('/postings/create')->assertInertia(fn (Assert $page) => $page
+        ->where('skills', ['Laravel', 'vue']));
+});
+
+it('rejects invalid skills', function (mixed $skills): void {
+    $this->post('/postings', postingInput(['skills' => $skills]))->assertSessionHasErrors();
+
+    expect(JobPosting::query()->count())->toBe(0);
+})->with([
+    'not a list' => ['PHP'],
+    'too long' => [[str_repeat('a', 101)]],
+]);

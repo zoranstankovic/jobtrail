@@ -54,6 +54,7 @@ class JobPostingController extends Controller
         $posting = $createJobPosting->handle(
             $request->string('company')->value(),
             $request->postingAttributes(),
+            $request->skillNames(),
         );
 
         $this->toast('Job posting created.');
@@ -109,6 +110,7 @@ class JobPostingController extends Controller
         return [
             'companies' => Company::query()->orderByRaw('lower(name)')->pluck('name')->all(),
             'sources' => JobPosting::sourceSuggestions(),
+            'skills' => Skill::query()->orderByRaw('lower(name)')->pluck('name')->all(),
         ];
     }
 }

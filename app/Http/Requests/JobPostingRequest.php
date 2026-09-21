@@ -46,6 +46,8 @@ class JobPostingRequest extends FormRequest
             'salary_period' => ['nullable', Rule::enum(SalaryPeriod::class)],
             'description' => ['nullable', 'string'],
             'posted_at' => ['nullable', 'date'],
+            'skills' => ['array'],
+            'skills.*' => ['string', 'max:100'],
         ];
     }
 
@@ -68,5 +70,18 @@ class JobPostingRequest extends FormRequest
     public function postingAttributes(): array
     {
         return $this->safe()->except(['company', 'skills', 'already_applied', 'applied_at']);
+    }
+
+    /**
+     * The typed skill names; ResolveSkills trims and deduplicates them.
+     *
+     * @return list<string>
+     */
+    public function skillNames(): array
+    {
+        /** @var list<string> $names */
+        $names = array_values($this->validated('skills', []));
+
+        return $names;
     }
 }

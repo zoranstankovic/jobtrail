@@ -106,4 +106,5 @@ export type PostingFormData = {
     salary_period: string;
     posted_at: string;
     description: string;
+    skills: string[];
 };

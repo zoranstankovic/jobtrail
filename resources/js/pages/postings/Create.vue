@@ -4,7 +4,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { store as storePosting } from '@/routes/postings';
 import type { PostingFormData } from '@/types/models';
 
-defineProps<{ companies: string[]; sources: string[] }>();
+defineProps<{ companies: string[]; sources: string[]; skills: string[] }>();
 
 const initial: PostingFormData = {
     company: '',
@@ -21,6 +21,7 @@ const initial: PostingFormData = {
     salary_period: '',
     posted_at: '',
     description: '',
+    skills: [],
 };
 </script>
 
@@ -32,6 +33,7 @@ const initial: PostingFormData = {
             submit-label="Create posting"
             :companies="companies"
             :sources="sources"
+            :skills="skills"
         />
     </AppLayout>
 </template>
