@@ -5,7 +5,6 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\JobApplicationController;
 use App\Http\Controllers\JobPostingController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 // Placeholder screens. Plan 3 replaces these closures with controllers.
 Route::redirect('/', '/postings');
@@ -30,7 +29,7 @@ Route::patch('/events/{event}', [ApplicationEventController::class, 'update'])
 Route::delete('/events/{event}', [ApplicationEventController::class, 'destroy'])
     ->name('events.destroy');
 
-Route::get('/applications', fn () => Inertia::render('applications/Index'))
+Route::get('/applications', [JobApplicationController::class, 'index'])
     ->name('applications.index');
 
 Route::resource('companies', CompanyController::class);

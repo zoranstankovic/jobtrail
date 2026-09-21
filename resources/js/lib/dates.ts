@@ -48,3 +48,8 @@ export function toDateTimeLocal(date: Date = new Date()): string {
 export function fromDateTimeLocal(value: string): string | null {
     return value === '' ? null : new Date(value).toISOString();
 }
+
+/** Whole days from a server timestamp until now. */
+export function daysSince(iso: string, now: Date = new Date()): number {
+    return Math.floor((now.getTime() - new Date(iso).getTime()) / 86_400_000);
+}

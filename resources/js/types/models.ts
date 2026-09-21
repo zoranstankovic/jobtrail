@@ -129,3 +129,20 @@ export type Application = {
     notes: string | null;
     events: ApplicationEvent[];
 };
+
+/** A row of the applications index (JobApplicationController@index). */
+export type ApplicationListItem = {
+    id: number;
+    status: string;
+    applied_at: string | null;
+    last_activity_at: string;
+    posting: { id: number; title: string };
+    company: { id: number; name: string };
+};
+
+/** A status tab of the applications index, with its count. */
+export type ApplicationTab = {
+    key: string;
+    label: string;
+    count: number;
+};
