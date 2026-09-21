@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\CreateJobPosting;
+use App\Actions\DeleteJobPosting;
 use App\Actions\UpdateJobPosting;
 use App\Http\Requests\JobPostingIndexRequest;
 use App\Http\Requests\JobPostingRequest;
@@ -92,6 +93,15 @@ class JobPostingController extends Controller
         $this->toast('Job posting updated.');
 
         return to_route('postings.show', $posting);
+    }
+
+    public function destroy(JobPosting $posting, DeleteJobPosting $deleteJobPosting): RedirectResponse
+    {
+        $deleteJobPosting->handle($posting);
+
+        $this->toast('Job posting deleted.');
+
+        return to_route('postings.index');
     }
 
     /**

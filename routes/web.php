@@ -8,7 +8,7 @@ use Inertia\Inertia;
 // Placeholder screens. Plan 3 replaces these closures with controllers.
 Route::redirect('/', '/postings');
 
-Route::resource('postings', JobPostingController::class)->only(['index', 'show', 'create', 'store', 'edit', 'update']);
+Route::resource('postings', JobPostingController::class);
 
 Route::get('/applications', fn () => Inertia::render('applications/Index'))
     ->name('applications.index');

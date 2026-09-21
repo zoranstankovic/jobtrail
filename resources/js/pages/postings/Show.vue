@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import DeleteButton from '@/components/DeleteButton.vue';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useEnums } from '@/composables/useEnums';
@@ -6,7 +7,10 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import { formatCalendarDate, formatDate } from '@/lib/dates';
 import { formatSalary } from '@/lib/salary';
 import { show as showCompany } from '@/routes/companies';
-import { edit as editPosting } from '@/routes/postings';
+import {
+    destroy as destroyPosting,
+    edit as editPosting,
+} from '@/routes/postings';
 import type { Posting } from '@/types/models';
 import { Link } from '@inertiajs/vue3';
 import { computed } from 'vue';
@@ -46,6 +50,11 @@ const details = computed(() => [
             <Button variant="outline" size="sm" as-child>
                 <Link :href="editPosting(posting.id)">Edit</Link>
             </Button>
+            <DeleteButton
+                :action="destroyPosting(posting.id)"
+                :title="`Delete ${posting.title}?`"
+                description="This cannot be undone. A posting with an application cannot be deleted; delete the application first."
+            />
         </template>
         <div class="grid gap-8 lg:grid-cols-3">
             <article class="space-y-6 lg:col-span-2">
