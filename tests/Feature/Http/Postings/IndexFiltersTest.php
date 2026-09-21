@@ -126,3 +126,15 @@ it('sorts by created date by default', function (): void {
 it('rejects an unknown sort', function (): void {
     $this->get('/postings?sort=title')->assertSessionHasErrors('sort');
 });
+
+it('finds a term with a slash as typed', function (): void {
+    JobPosting::factory()->create(['title' => 'Full Stack Developer (Laravel/Vue)', 'description' => 'Backend work.']);
+    // Both words, but not next to each other.
+    JobPosting::factory()->create(['title' => 'Vue Developer', 'description' => 'We also know Laravel.']);
+
+    $this->get('/postings?search='.urlencode('Laravel/Vue'))->assertInertia(fn (Assert $page) => $page
+        ->where('filters.search', 'Laravel/Vue')
+        ->where('postings.data', fn (Collection $postings) => $postings->pluck('title')->all() === [
+            'Full Stack Developer (Laravel/Vue)',
+        ]));
+});

@@ -6,6 +6,7 @@ use App\Enums\EmploymentType;
 use App\Enums\SalaryPeriod;
 use App\Enums\Seniority;
 use App\Enums\WorkMode;
+use App\Support\SearchTerms;
 use Carbon\CarbonImmutable;
 use Database\Factories\JobPostingFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -131,7 +132,7 @@ class JobPosting extends Model
             // -exclusions, or) and never fails on odd input.
             $query->whereRaw(
                 'search_vector @@ websearch_to_tsquery(?::regconfig, ?)',
-                [self::SEARCH_CONFIG, $filters['search']],
+                [self::SEARCH_CONFIG, SearchTerms::forWebSearch($filters['search'])],
             );
         }
 
