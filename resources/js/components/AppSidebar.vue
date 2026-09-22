@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import ThemeToggle from '@/components/ThemeToggle.vue';
 import {
     Sidebar,
     SidebarContent,
+    SidebarFooter,
     SidebarGroup,
     SidebarGroupLabel,
     SidebarHeader,
@@ -51,5 +53,8 @@ const currentPath = computed(() => page.url.split('?')[0]);
                 </SidebarMenu>
             </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter>
+            <ThemeToggle />
+        </SidebarFooter>
     </Sidebar>
 </template>

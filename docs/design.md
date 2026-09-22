@@ -345,6 +345,7 @@ Every screen is an Inertia page in `resources/js/pages/`. Filters, sorting and p
 - Confirmation dialogs before deletes.
 - Empty states with a call to action.
 - Inline validation errors.
+- Light, dark or system theme, chosen with a toggle in the sidebar footer and kept in a cookie, so the server renders the chosen theme without a flash. System (the default) follows the operating system.
 
 ## 7. Testing
 

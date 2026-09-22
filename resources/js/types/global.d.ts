@@ -24,6 +24,7 @@ declare module '@inertiajs/core' {
         sharedPageProps: {
             name: string;
             sidebarOpen: boolean;
+            appearance: 'light' | 'dark' | 'system';
             enums: SharedEnums;
             [key: string]: unknown;
         };

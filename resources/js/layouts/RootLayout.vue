@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { Toaster } from '@/components/ui/sonner';
+import { useAppearance } from '@/composables/useAppearance';
 import { router } from '@inertiajs/vue3';
 import { onUnmounted } from 'vue';
 import { toast } from 'vue-sonner';
 import 'vue-sonner/style.css';
+
+const { appearance } = useAppearance();
 
 // Registered as the persistent layout in app.ts: it is created once and stays
 // mounted across visits, so a toast survives the page change of a redirect.
@@ -27,5 +30,5 @@ onUnmounted(stopListening);
 <template>
     <slot />
     <!-- Bottom right: at the top, toasts covered the header's actions. -->
-    <Toaster position="bottom-right" />
+    <Toaster position="bottom-right" :theme="appearance" />
 </template>

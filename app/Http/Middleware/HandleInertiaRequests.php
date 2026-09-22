@@ -46,6 +46,7 @@ class HandleInertiaRequests extends Middleware
             'name' => config('app.name'),
             'sidebarOpen' => ! $request->hasCookie('sidebar_state')
                 || $request->cookie('sidebar_state') === 'true',
+            'appearance' => $this->appearance($request),
             'enums' => fn (): array => [
                 'applicationStatus' => EnumOptions::for(ApplicationStatus::class),
                 'workMode' => EnumOptions::for(WorkMode::class),
@@ -54,5 +55,16 @@ class HandleInertiaRequests extends Middleware
                 'salaryPeriod' => EnumOptions::for(SalaryPeriod::class),
             ],
         ];
+    }
+
+    /**
+     * The theme the visitor picked with the sidebar toggle: light, dark or
+     * system (the default, which follows the operating system).
+     */
+    private function appearance(Request $request): string
+    {
+        $appearance = $request->cookie('appearance');
+
+        return in_array($appearance, ['light', 'dark'], true) ? $appearance : 'system';
     }
 }
