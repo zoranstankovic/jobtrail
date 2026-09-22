@@ -15,6 +15,7 @@ It is a single-user app without a login, built with Laravel 13, Vue 3 and Postgr
 - **Companies** as their own records, created inline while adding a posting.
 - **Applications** with seven statuses (Saved, Applied, Interviewing, Offer, Accepted, Rejected, Withdrawn) and a dated history. Entries can be backdated, edited and undone, and the history always stays in order.
 - **Follow-ups first:** the Applications view groups applications by status and lists the ones with the oldest activity first.
+- **Light and dark theme:** a toggle in the sidebar; by default it follows the operating system.
 - **Demo data:** 12 fictional companies, 40 postings and 25 applications from the German job market, recreated identically on every reset.
 
 ![A posting with its application history](docs/screenshots/posting-detail.png)
@@ -23,7 +24,7 @@ It is a single-user app without a login, built with Laravel 13, Vue 3 and Postgr
 
 ## Quick start
 
-You need Docker with Compose v2 (for example Docker Desktop) and free ports 8080, 5173, 5432 and 5050. JobTrail is developed and tested on macOS with Docker Desktop.
+You need Docker with Compose v2 (for example Docker Desktop) and free ports 8080, 5173, 5432 and 5050. JobTrail is developed on macOS with Docker Desktop and also checked on Linux with Docker Engine.
 
 ```bash
 git clone https://github.com/zoranstankovic/jobtrail.git
@@ -34,6 +35,8 @@ docker compose up
 The first start builds the image and installs the Composer and npm dependencies, which takes a few minutes. When the log shows `[entrypoint] ready` and the Vite dev server has started, open <http://localhost:8080>.
 
 There is nothing else to set up: `.env` is created from `.env.example` with a new application key, the migrations run, and the demo data is seeded into the empty database.
+
+On Linux the containers act as the owner of the checkout, so `vendor/`, `node_modules/`, `.env` and the logs belong to you, not to root.
 
 ## Services
 
