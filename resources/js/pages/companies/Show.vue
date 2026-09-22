@@ -56,6 +56,40 @@ defineProps<{ company: Company; postings: CompanyPosting[] }>();
                     </dd>
                 </div>
                 <div>
+                    <dt class="text-muted-foreground">Careers page</dt>
+                    <dd>
+                        <a
+                            v-if="company.careers_url"
+                            :href="company.careers_url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="break-all underline-offset-4 hover:underline"
+                        >
+                            {{ company.careers_url }}
+                        </a>
+                        <span v-else>—</span>
+                    </dd>
+                </div>
+                <div>
+                    <dt class="text-muted-foreground">ATS</dt>
+                    <dd>{{ company.ats ?? '—' }}</dd>
+                </div>
+                <div>
+                    <dt class="text-muted-foreground">ATS job board</dt>
+                    <dd>
+                        <a
+                            v-if="company.ats_jobs_url"
+                            :href="company.ats_jobs_url"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="break-all underline-offset-4 hover:underline"
+                        >
+                            {{ company.ats_jobs_url }}
+                        </a>
+                        <span v-else>—</span>
+                    </dd>
+                </div>
+                <div>
                     <dt class="text-muted-foreground">Notes</dt>
                     <dd class="whitespace-pre-line">
                         {{ company.notes ?? '—' }}

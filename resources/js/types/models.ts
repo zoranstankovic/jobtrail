@@ -4,6 +4,7 @@ export type CompanyListItem = {
     name: string;
     city: string | null;
     website: string | null;
+    ats: string | null;
     postings_count: number;
     applications_count: number;
 };
@@ -15,6 +16,9 @@ export type Company = {
     website: string | null;
     city: string | null;
     notes: string | null;
+    careers_url: string | null;
+    ats: string | null;
+    ats_jobs_url: string | null;
 };
 
 /** A posting as listed on the company detail page. */
@@ -31,6 +35,9 @@ export type CompanyFormData = {
     website: string;
     city: string;
     notes: string;
+    careers_url: string;
+    ats: string;
+    ats_jobs_url: string;
 };
 
 /** Laravel's LengthAwarePaginator as JSON — the fields the UI uses. */

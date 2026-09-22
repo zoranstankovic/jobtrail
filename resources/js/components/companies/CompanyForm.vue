@@ -12,6 +12,7 @@ const props = defineProps<{
     initial: CompanyFormData;
     action: RouteDefinition<'post'> | RouteDefinition<'put'>;
     submitLabel: string;
+    atsSuggestions: string[];
 }>();
 
 const form = useForm({ ...props.initial });
@@ -49,6 +50,54 @@ function submit(): void {
             </FormField>
             <FormField id="notes" label="Notes" :error="form.errors.notes">
                 <Textarea id="notes" v-model="form.notes" class="min-h-32" />
+            </FormField>
+            <h2 class="pt-2 text-base font-medium">Careers</h2>
+            <FormField
+                id="careers_url"
+                label="Careers page"
+                :error="form.errors.careers_url"
+            >
+                <Input
+                    id="careers_url"
+                    v-model="form.careers_url"
+                    type="url"
+                    placeholder="https://"
+                    :aria-invalid="form.errors.careers_url ? true : undefined"
+                />
+            </FormField>
+            <FormField
+                id="ats"
+                label="Applicant tracking system"
+                :error="form.errors.ats"
+            >
+                <Input
+                    id="ats"
+                    v-model="form.ats"
+                    list="ats-suggestions"
+                    autocomplete="off"
+                    placeholder="e.g. personio"
+                    :aria-invalid="form.errors.ats ? true : undefined"
+                />
+                <datalist id="ats-suggestions">
+                    <option
+                        v-for="ats in atsSuggestions"
+                        :key="ats"
+                        :value="ats"
+                    />
+                </datalist>
+            </FormField>
+            <FormField
+                id="ats_jobs_url"
+                label="Job board on the ATS"
+                :error="form.errors.ats_jobs_url"
+            >
+                <Input
+                    id="ats_jobs_url"
+                    v-model="form.ats_jobs_url"
+                    type="url"
+                    placeholder="https://"
+                    :aria-invalid="form.errors.ats_jobs_url ? true : undefined"
+                />
             </FormField>
             <div>
                 <Button type="submit" :disabled="form.processing">

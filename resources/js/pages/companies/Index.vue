@@ -54,6 +54,7 @@ defineProps<{ companies: CompanyListItem[] }>();
                     <TableHead>Name</TableHead>
                     <TableHead>City</TableHead>
                     <TableHead>Website</TableHead>
+                    <TableHead>ATS</TableHead>
                     <TableHead class="text-right">Postings</TableHead>
                     <TableHead class="text-right">Applications</TableHead>
                 </TableRow>
@@ -81,6 +82,7 @@ defineProps<{ companies: CompanyListItem[] }>();
                         </a>
                         <span v-else>—</span>
                     </TableCell>
+                    <TableCell>{{ company.ats ?? '—' }}</TableCell>
                     <TableCell class="text-right">
                         {{ company.postings_count }}
                     </TableCell>

@@ -339,8 +339,9 @@ Every screen is an Inertia page in `resources/js/pages/`. Filters, sorting and p
 
 ### 6.5 Companies (`/companies`, `/companies/{id}`, create/edit)
 
-- **Index:** name, city, website, posting count, application count.
-- **Detail:** company fields, notes, and its postings with application status.
+- **Index:** name, city, website, ATS, posting count, application count.
+- **Detail:** company fields (including the careers page, the ATS and its job board, as links), notes, and its postings with application status.
+- **Form:** name, website, city, notes, and a "Careers" section: careers page, ATS (suggestions + free entry), job board on the ATS.
 - **Delete** is blocked when the company has postings (§5.7).
 
 ### 6.6 Shared UI
