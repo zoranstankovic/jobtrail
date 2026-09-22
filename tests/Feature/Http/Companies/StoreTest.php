@@ -56,3 +56,12 @@ it('rejects a name that exists with different casing', function (): void {
 
     expect(Company::query()->count())->toBe(1);
 });
+
+it('rejects a name that differs only in inner whitespace', function (): void {
+    Company::factory()->create(['name' => 'Test Company']);
+
+    $this->post('/companies', ['name' => 'Test  Company'])
+        ->assertSessionHasErrors(['name' => 'The name has already been taken.']);
+
+    expect(Company::query()->count())->toBe(1);
+});

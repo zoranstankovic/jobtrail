@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Company;
 use App\Rules\UniqueCaseInsensitive;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 /**
  * Validates the company form, for both create and edit
@@ -31,5 +32,19 @@ class CompanyRequest extends FormRequest
             'city' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
         ];
+    }
+
+    /**
+     * Collapse runs of whitespace in the name, so "Acme  GmbH" is stored and
+     * checked for uniqueness as "Acme GmbH" and cannot sneak in as a
+     * duplicate that renders identically.
+     */
+    protected function prepareForValidation(): void
+    {
+        $name = $this->input('name');
+
+        if (is_string($name)) {
+            $this->merge(['name' => Str::squish($name)]);
+        }
     }
 }

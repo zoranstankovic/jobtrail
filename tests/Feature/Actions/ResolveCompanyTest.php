@@ -18,3 +18,12 @@ it('creates a company with the trimmed name when none matches', function (): voi
     expect($company->exists)->toBeTrue()
         ->and($company->name)->toBe('Nordlicht Software GmbH');
 });
+
+it('returns the existing company when the name differs only in inner whitespace', function (): void {
+    $company = Company::factory()->create(['name' => 'Test Company']);
+
+    $resolved = app(ResolveCompany::class)->handle('Test  Company');
+
+    expect($resolved->is($company))->toBeTrue()
+        ->and(Company::query()->count())->toBe(1);
+});
