@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import AppLogo from '@/components/AppLogo.vue';
 import ThemeToggle from '@/components/ThemeToggle.vue';
 import {
     Sidebar,
@@ -31,8 +32,20 @@ const currentPath = computed(() => page.url.split('?')[0]);
 
 <template>
     <Sidebar collapsible="icon">
-        <SidebarHeader class="px-4 py-3">
-            <span class="text-base font-semibold">JobTrail</span>
+        <SidebarHeader>
+            <SidebarMenu>
+                <SidebarMenuItem>
+                    <SidebarMenuButton
+                        size="lg"
+                        :tooltip="$page.props.name"
+                        as-child
+                    >
+                        <Link :href="indexPostings.url()">
+                            <AppLogo />
+                        </Link>
+                    </SidebarMenuButton>
+                </SidebarMenuItem>
+            </SidebarMenu>
         </SidebarHeader>
         <SidebarContent>
             <SidebarGroup>

@@ -295,7 +295,7 @@ All rules live in Action classes. Every multi-row write runs in a single DB tran
 
 ## 6. Screens and User Flows
 
-Every screen is an Inertia page in `resources/js/pages/`. Filters, sorting and pagination live in the query string. Sidebar navigation: **Job Postings · Applications · Companies**. `/` redirects to `/postings`.
+Every screen is an Inertia page in `resources/js/pages/`. Filters, sorting and pagination live in the query string. Sidebar: the JobTrail logo (only its mark when the sidebar is collapsed to icons), then navigation: **Job Postings · Applications · Companies**. `/` redirects to `/postings`.
 
 ### 6.1 Job Postings: index (`/postings`)
 
