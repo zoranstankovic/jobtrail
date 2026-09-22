@@ -16,7 +16,9 @@ return [
     */
 
     'ssr' => [
-        'enabled' => true,
+        // JobTrail renders in the browser only. There is no SSR bundle, and in
+        // development the app container cannot reach Vite's SSR endpoint.
+        'enabled' => false,
         'url' => 'http://127.0.0.1:13714',
         // 'bundle' => base_path('bootstrap/ssr/ssr.mjs'),
 

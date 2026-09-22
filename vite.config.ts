@@ -17,7 +17,9 @@ export default defineConfig({
                 }),
             ],
         }),
-        inertia(),
+        // No server-side rendering (see config/inertia.php): skip the SSR
+        // endpoint and the start-up warm-up of the SSR module graph.
+        inertia({ ssr: false }),
         tailwindcss(),
         vue({
             template: {
