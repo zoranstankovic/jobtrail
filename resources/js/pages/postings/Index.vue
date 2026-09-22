@@ -78,10 +78,8 @@ const { label } = useEnums();
             <Table v-else>
                 <TableHeader>
                     <TableRow>
-                        <TableHead>Title</TableHead>
-                        <TableHead>Company</TableHead>
+                        <TableHead>Posting</TableHead>
                         <TableHead>Location</TableHead>
-                        <TableHead>Work mode</TableHead>
                         <TableHead>Seniority</TableHead>
                         <TableHead>Skills</TableHead>
                         <TableHead>Source</TableHead>
@@ -93,25 +91,30 @@ const { label } = useEnums();
                         v-for="posting in postings.data"
                         :key="posting.id"
                     >
-                        <TableCell class="font-medium">
+                        <TableCell class="max-w-72 whitespace-normal">
                             <Link
                                 :href="showPosting(posting.id)"
-                                class="underline-offset-4 hover:underline"
+                                class="font-medium underline-offset-4 hover:underline"
                             >
                                 {{ posting.title }}
                             </Link>
+                            <div class="text-muted-foreground text-xs">
+                                <Link
+                                    :href="showCompany(posting.company.id)"
+                                    class="underline-offset-4 hover:underline"
+                                >
+                                    {{ posting.company.name }}
+                                </Link>
+                            </div>
                         </TableCell>
                         <TableCell>
-                            <Link
-                                :href="showCompany(posting.company.id)"
-                                class="underline-offset-4 hover:underline"
+                            <div>{{ posting.location ?? '—' }}</div>
+                            <div
+                                v-if="posting.work_mode"
+                                class="text-muted-foreground text-xs"
                             >
-                                {{ posting.company.name }}
-                            </Link>
-                        </TableCell>
-                        <TableCell>{{ posting.location ?? '—' }}</TableCell>
-                        <TableCell>
-                            {{ label('workMode', posting.work_mode) }}
+                                {{ label('workMode', posting.work_mode) }}
+                            </div>
                         </TableCell>
                         <TableCell>
                             {{ label('seniority', posting.seniority) }}
