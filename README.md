@@ -12,7 +12,7 @@ It is a single-user app without a login, built with Laravel 13, Vue 3 and Postgr
 
 - **Job postings** with company, location, work mode, seniority, salary, source, skills and the full text of the ad.
 - **Search and filters:** full-text search over title and description; filters for application state, work mode, seniority, skill and source.
-- **Companies** as their own records, created inline while adding a posting.
+- **Companies** as their own records, created inline while adding a posting, with their careers page and the applicant tracking system (ATS) they use.
 - **Applications** with seven statuses (Saved, Applied, Interviewing, Offer, Accepted, Rejected, Withdrawn) and a dated history. Entries can be backdated, edited and undone, and the history always stays in order.
 - **Follow-ups first:** the Applications view groups applications by status and lists the ones with the oldest activity first.
 - **Light and dark theme:** a toggle in the sidebar; by default it follows the operating system.
