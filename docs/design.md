@@ -402,6 +402,7 @@ No frontend unit tests in Phase 1. `make lint` runs:
   - ~40 postings with varied work modes, seniorities, salaries and sources
   - ~30 skills (PHP, Laravel, Symfony, Vue, React, TypeScript, PostgreSQL, MySQL, Docker, Kubernetes, AWS, Go, …), attached with a weighted distribution so the "most requested skills" analysis looks meaningful
   - ~25 applications across all statuses, with plausible, chronologically consistent event histories over the last ~3 months
+  - most histories belong to the oldest postings; a few of the newest postings get a short, fresh one, so the default postings list (newest first) shows status badges too
 - The seeded data must satisfy the consistency invariant (§5.8). It is built through the same Actions or verified by the seeder test.
 
 ## 9. CI (GitHub Actions)

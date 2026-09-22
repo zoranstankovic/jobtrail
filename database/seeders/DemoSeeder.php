@@ -135,6 +135,20 @@ class DemoSeeder extends Seeder
     ];
 
     /**
+     * Short histories for a few of the newest postings, keyed by position in
+     * the newest-first order, so the default postings list shows status
+     * badges and not only "Not applied".
+     *
+     * @var array<int, list<ApplicationStatus>>
+     */
+    private const RECENT_HISTORIES = [
+        0 => [ApplicationStatus::Saved],
+        2 => [ApplicationStatus::Applied],
+        4 => [ApplicationStatus::Saved, ApplicationStatus::Applied],
+        7 => [ApplicationStatus::Applied, ApplicationStatus::Interviewing],
+    ];
+
+    /**
      * @var list<string>
      */
     private const EVENT_NOTES = [
@@ -178,10 +192,12 @@ class DemoSeeder extends Seeder
             $postings[] = $this->createPosting($createJobPosting, $faker, $faker->randomElement($companies), $now, $number);
         }
 
-        // The oldest postings have had time for a history. usort is stable.
+        // The oldest postings have had time for a long history. usort is stable.
         usort($postings, fn (array $a, array $b): int => $a['created_at'] <=> $b['created_at']);
 
-        foreach (array_slice($postings, 0, self::APPLICATION_COUNT) as $index => $entry) {
+        $longHistoryCount = self::APPLICATION_COUNT - count(self::RECENT_HISTORIES);
+
+        foreach (array_slice($postings, 0, $longHistoryCount) as $index => $entry) {
             $history = self::HISTORIES[$index] ?? $faker->randomElement(self::HISTORIES);
 
             $this->createHistory(
@@ -190,6 +206,22 @@ class DemoSeeder extends Seeder
                 $faker,
                 $entry['posting'],
                 $entry['created_at'],
+                $history,
+                $now,
+            );
+        }
+
+        // Created after the long histories, so those consume the same Faker
+        // draws as before and stay unchanged.
+        $newestFirst = array_reverse($postings);
+
+        foreach (self::RECENT_HISTORIES as $position => $history) {
+            $this->createHistory(
+                $createJobApplication,
+                $changeApplicationStatus,
+                $faker,
+                $newestFirst[$position]['posting'],
+                $newestFirst[$position]['created_at'],
                 $history,
                 $now,
             );

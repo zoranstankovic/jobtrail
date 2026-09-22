@@ -70,3 +70,21 @@ it('produces the same records on every run', function (): void {
 
     expect($fingerprint())->toBe($first);
 });
+
+it('gives some of the newest postings a fresh application', function (): void {
+    $this->seed(DemoSeeder::class);
+
+    // The postings index sorts like this by default (newest first).
+    $statuses = JobPosting::query()
+        ->with('application')
+        ->latest()
+        ->orderByDesc('id')
+        ->limit(10)
+        ->get()
+        ->map(fn (JobPosting $posting): ?string => $posting->application?->status->value)
+        ->all();
+
+    expect($statuses)->toBe([
+        'saved', null, 'applied', null, 'applied', null, null, 'interviewing', null, null,
+    ]);
+});
