@@ -31,7 +31,7 @@ JobTrail is a personal, single-user job search tracker that runs locally. It kee
 |---|---|---|
 | 1 | Postings, companies, skills, applications + history, Docker, tests, CI, demo seed | this document |
 | 1.5 | Analytics dashboard: applications over time, response rates, time-to-response, most requested skills, per-source conversion | separate |
-| 2 | Pluggable job-source connectors (API/RSS only, no scraping; German market first: Bundesagentur für Arbeit Jobsuche, Arbeitnow, Adzuna), enabled/disabled via config, scheduler + queue | separate |
+| 2 | Pluggable job-source connectors (API/RSS only, no scraping; German market first: Bundesagentur für Arbeit Jobsuche, Arbeitnow, Adzuna), enabled/disabled via config, scheduler + queue; a company's recorded ATS (§4.2) can point a connector to its public job feed | separate |
 | later | Contacts, kanban view, browser tests | — |
 
 ### Phase 1 milestones
@@ -164,6 +164,9 @@ A posting without an application means "not applied". No separate flag exists.
 | `website` | varchar(2048) | nullable |
 | `city` | varchar(255) | nullable |
 | `notes` | text | nullable |
+| `careers_url` | varchar(2048) | nullable; the company's own careers page |
+| `ats` | varchar(50) | nullable; the applicant tracking system it uses (`personio`, `softgarden`, `greenhouse`, …); stored lowercase with whitespace collapsed |
+| `ats_jobs_url` | varchar(2048) | nullable; the company's job board on that ATS |
 | `created_at`, `updated_at` | timestamptz | |
 
 ### 4.3 `job_postings`
@@ -401,6 +404,7 @@ No frontend unit tests in Phase 1. `make lint` runs:
 - `DemoSeeder` uses a fixed Faker seed, so the output is identical on every `make fresh`.
 - The data is realistic for the German market and entirely fictional:
   - ~12 fictional companies (e.g. "Nordlicht Software GmbH") in Berlin, München, Hamburg, Köln, or remote
+  - about half of them with a careers page, an ATS and its job board URL (all on `.example` hosts)
   - ~40 postings with varied work modes, seniorities, salaries and sources
   - ~30 skills (PHP, Laravel, Symfony, Vue, React, TypeScript, PostgreSQL, MySQL, Docker, Kubernetes, AWS, Go, …), attached with a weighted distribution so the "most requested skills" analysis looks meaningful
   - ~25 applications across all statuses, with plausible, chronologically consistent event histories over the last ~3 months

@@ -31,6 +31,9 @@ class CompanyRequest extends FormRequest
             'website' => ['nullable', 'url', 'max:2048'],
             'city' => ['nullable', 'string', 'max:255'],
             'notes' => ['nullable', 'string'],
+            'careers_url' => ['nullable', 'url', 'max:2048'],
+            'ats' => ['nullable', 'string', 'max:50'],
+            'ats_jobs_url' => ['nullable', 'url', 'max:2048'],
         ];
     }
 

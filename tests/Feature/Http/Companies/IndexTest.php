@@ -6,7 +6,7 @@ use App\Models\JobPosting;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('lists companies by name with their posting and application counts', function (): void {
-    $acme = Company::factory()->create(['name' => 'Acme GmbH', 'city' => 'Berlin', 'website' => 'https://acme.example']);
+    $acme = Company::factory()->create(['name' => 'Acme GmbH', 'city' => 'Berlin', 'website' => 'https://acme.example', 'ats' => 'personio']);
     Company::factory()->create(['name' => 'beta AG']);
     $postings = JobPosting::factory()->count(2)->for($acme)->create();
     app(CreateJobApplication::class)->handle($postings[0]);
@@ -21,6 +21,7 @@ it('lists companies by name with their posting and application counts', function
                 'name' => 'Acme GmbH',
                 'city' => 'Berlin',
                 'website' => 'https://acme.example',
+                'ats' => 'personio',
                 'postings_count' => 2,
                 'applications_count' => 1,
             ])

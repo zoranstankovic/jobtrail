@@ -4,7 +4,7 @@ use App\Models\Company;
 use Inertia\Testing\AssertableInertia as Assert;
 
 it('renders the edit form with the company', function (): void {
-    $company = Company::factory()->create(['name' => 'Acme GmbH', 'website' => null, 'city' => 'Berlin', 'notes' => null]);
+    $company = Company::factory()->create(['name' => 'Acme GmbH', 'website' => null, 'city' => 'Berlin', 'notes' => null, 'ats' => 'personio']);
 
     $this->get("/companies/{$company->id}/edit")
         ->assertOk()
@@ -16,7 +16,11 @@ it('renders the edit form with the company', function (): void {
                 'website' => null,
                 'city' => 'Berlin',
                 'notes' => null,
-            ]));
+                'careers_url' => null,
+                'ats' => 'personio',
+                'ats_jobs_url' => null,
+            ])
+            ->where('atsSuggestions', Company::ATS_SUGGESTIONS));
 });
 
 it('updates a company and redirects to it', function (): void {

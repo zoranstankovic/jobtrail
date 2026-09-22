@@ -33,3 +33,20 @@ it('rejects a company name that differs only in letter case', function (): void 
     expect(fn () => Company::factory()->create(['name' => 'NORDLICHT software gmbh']))
         ->toThrow(UniqueConstraintViolationException::class, 'companies_name_lower_unique');
 });
+
+it('stores the ATS lowercase with whitespace collapsed', function (): void {
+    $company = Company::factory()->create(['ats' => '  Smart  Recruiters ']);
+
+    expect($company->fresh()?->ats)->toBe('smart recruiters');
+});
+
+it('suggests the known ATS merged with the ones in use, sorted', function (): void {
+    Company::factory()->create(['ats' => 'Taleo']);
+    Company::factory()->create(['ats' => 'personio']);
+    Company::factory()->create(['ats' => null]);
+
+    expect(Company::atsSuggestions())->toBe([
+        'dvinci', 'greenhouse', 'join', 'lever', 'personio', 'recruitee',
+        'rexx', 'smartrecruiters', 'softgarden', 'successfactors', 'taleo', 'workday',
+    ]);
+});

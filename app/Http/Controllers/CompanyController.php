@@ -23,6 +23,7 @@ class CompanyController extends Controller
                 'name' => $company->name,
                 'city' => $company->city,
                 'website' => $company->website,
+                'ats' => $company->ats,
                 'postings_count' => $company->job_postings_count,
                 'applications_count' => $company->job_applications_count,
             ]);
@@ -47,14 +48,16 @@ class CompanyController extends Controller
             ]);
 
         return Inertia::render('companies/Show', [
-            'company' => $company->only(['id', 'name', 'website', 'city', 'notes']),
+            'company' => $company->only(['id', 'name', 'website', 'city', 'notes', 'careers_url', 'ats', 'ats_jobs_url']),
             'postings' => $postings,
         ]);
     }
 
     public function create(): Response
     {
-        return Inertia::render('companies/Create');
+        return Inertia::render('companies/Create', [
+            'atsSuggestions' => Company::atsSuggestions(),
+        ]);
     }
 
     public function store(CompanyRequest $request): RedirectResponse
@@ -69,7 +72,8 @@ class CompanyController extends Controller
     public function edit(Company $company): Response
     {
         return Inertia::render('companies/Edit', [
-            'company' => $company->only(['id', 'name', 'website', 'city', 'notes']),
+            'company' => $company->only(['id', 'name', 'website', 'city', 'notes', 'careers_url', 'ats', 'ats_jobs_url']),
+            'atsSuggestions' => Company::atsSuggestions(),
         ]);
     }
 

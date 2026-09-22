@@ -36,21 +36,21 @@ class DemoSeeder extends Seeder
     private const APPLICATION_COUNT = 25;
 
     /**
-     * @var list<array{name: string, city: string|null, website: string, notes: string|null}>
+     * @var list<array{name: string, city: string|null, website: string, notes: string|null, careers_url: string|null, ats: string|null, ats_jobs_url: string|null}>
      */
     private const COMPANIES = [
-        ['name' => 'Nordlicht Software GmbH', 'city' => 'Hamburg', 'website' => 'https://nordlicht-software.example', 'notes' => null],
-        ['name' => 'Isarwerk Digital GmbH', 'city' => 'München', 'website' => 'https://isarwerk-digital.example', 'notes' => null],
-        ['name' => 'Spreeblick Labs GmbH', 'city' => 'Berlin', 'website' => 'https://spreeblick-labs.example', 'notes' => 'Friendly team, fast hiring process.'],
-        ['name' => 'Domblick Systems GmbH', 'city' => 'Köln', 'website' => 'https://domblick-systems.example', 'notes' => null],
-        ['name' => 'Elbfeld Technologies GmbH', 'city' => 'Hamburg', 'website' => 'https://elbfeld-tech.example', 'notes' => null],
-        ['name' => 'Bergquelle Data AG', 'city' => 'München', 'website' => 'https://bergquelle-data.example', 'notes' => 'Large data platform team.'],
-        ['name' => 'Kranich Commerce GmbH', 'city' => 'Berlin', 'website' => 'https://kranich-commerce.example', 'notes' => null],
-        ['name' => 'Rheinbogen IT Solutions GmbH', 'city' => 'Köln', 'website' => 'https://rheinbogen-it.example', 'notes' => null],
-        ['name' => 'Lindenhof Health Tech GmbH', 'city' => 'Berlin', 'website' => 'https://lindenhof-health.example', 'notes' => null],
-        ['name' => 'Seewind Mobility GmbH', 'city' => 'München', 'website' => 'https://seewind-mobility.example', 'notes' => null],
-        ['name' => 'Fernweh Travel Tech GmbH', 'city' => null, 'website' => 'https://fernweh-travel.example', 'notes' => 'Fully remote company.'],
-        ['name' => 'Wolkenbruch Cloud GmbH', 'city' => 'Berlin', 'website' => 'https://wolkenbruch-cloud.example', 'notes' => null],
+        ['name' => 'Nordlicht Software GmbH', 'city' => 'Hamburg', 'website' => 'https://nordlicht-software.example', 'notes' => null, 'careers_url' => 'https://nordlicht-software.example/careers', 'ats' => 'personio', 'ats_jobs_url' => 'https://nordlicht-software.jobs.personio.example'],
+        ['name' => 'Isarwerk Digital GmbH', 'city' => 'München', 'website' => 'https://isarwerk-digital.example', 'notes' => null, 'careers_url' => 'https://isarwerk-digital.example/jobs', 'ats' => 'softgarden', 'ats_jobs_url' => 'https://isarwerk-digital.softgarden.example'],
+        ['name' => 'Spreeblick Labs GmbH', 'city' => 'Berlin', 'website' => 'https://spreeblick-labs.example', 'notes' => 'Friendly team, fast hiring process.', 'careers_url' => 'https://spreeblick-labs.example/careers', 'ats' => 'join', 'ats_jobs_url' => 'https://join.example/companies/spreeblick-labs'],
+        ['name' => 'Domblick Systems GmbH', 'city' => 'Köln', 'website' => 'https://domblick-systems.example', 'notes' => null, 'careers_url' => null, 'ats' => null, 'ats_jobs_url' => null],
+        ['name' => 'Elbfeld Technologies GmbH', 'city' => 'Hamburg', 'website' => 'https://elbfeld-tech.example', 'notes' => null, 'careers_url' => 'https://elbfeld-tech.example/careers', 'ats' => 'greenhouse', 'ats_jobs_url' => 'https://job-boards.greenhouse.example/elbfeld'],
+        ['name' => 'Bergquelle Data AG', 'city' => 'München', 'website' => 'https://bergquelle-data.example', 'notes' => 'Large data platform team.', 'careers_url' => 'https://bergquelle-data.example/karriere', 'ats' => 'workday', 'ats_jobs_url' => 'https://bergquelle.myworkdayjobs.example/careers'],
+        ['name' => 'Kranich Commerce GmbH', 'city' => 'Berlin', 'website' => 'https://kranich-commerce.example', 'notes' => null, 'careers_url' => null, 'ats' => null, 'ats_jobs_url' => null],
+        ['name' => 'Rheinbogen IT Solutions GmbH', 'city' => 'Köln', 'website' => 'https://rheinbogen-it.example', 'notes' => null, 'careers_url' => null, 'ats' => null, 'ats_jobs_url' => null],
+        ['name' => 'Lindenhof Health Tech GmbH', 'city' => 'Berlin', 'website' => 'https://lindenhof-health.example', 'notes' => null, 'careers_url' => 'https://lindenhof-health.example/careers', 'ats' => 'recruitee', 'ats_jobs_url' => 'https://lindenhof-health.recruitee.example'],
+        ['name' => 'Seewind Mobility GmbH', 'city' => 'München', 'website' => 'https://seewind-mobility.example', 'notes' => null, 'careers_url' => null, 'ats' => null, 'ats_jobs_url' => null],
+        ['name' => 'Fernweh Travel Tech GmbH', 'city' => null, 'website' => 'https://fernweh-travel.example', 'notes' => 'Fully remote company.', 'careers_url' => 'https://fernweh-travel.example/jobs', 'ats' => null, 'ats_jobs_url' => null],
+        ['name' => 'Wolkenbruch Cloud GmbH', 'city' => 'Berlin', 'website' => 'https://wolkenbruch-cloud.example', 'notes' => null, 'careers_url' => null, 'ats' => null, 'ats_jobs_url' => null],
     ];
 
     /**

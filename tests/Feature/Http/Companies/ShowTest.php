@@ -12,6 +12,9 @@ it('shows a company with its postings, newest first, and their application statu
         'website' => 'https://acme.example',
         'city' => 'Berlin',
         'notes' => "Line one\nLine two",
+        'careers_url' => 'https://acme.example/careers',
+        'ats' => 'greenhouse',
+        'ats_jobs_url' => 'https://boards.greenhouse.example/acme',
     ]);
     $older = JobPosting::factory()->for($company)->create([
         'title' => 'PHP Developer',
@@ -34,6 +37,9 @@ it('shows a company with its postings, newest first, and their application statu
                 'website' => 'https://acme.example',
                 'city' => 'Berlin',
                 'notes' => "Line one\nLine two",
+                'careers_url' => 'https://acme.example/careers',
+                'ats' => 'greenhouse',
+                'ats_jobs_url' => 'https://boards.greenhouse.example/acme',
             ])
             ->has('postings', 2)
             ->where('postings.0', [
