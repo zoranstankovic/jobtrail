@@ -28,6 +28,12 @@ it('stores the source trimmed and lowercase', function (): void {
     expect($posting->fresh()?->source)->toBe('linkedin');
 });
 
+it('stores the source with inner whitespace collapsed', function (): void {
+    $posting = JobPosting::factory()->create(['source' => 'Company   Website']);
+
+    expect($posting->fresh()?->source)->toBe('company website');
+});
+
 it('defaults the salary currency to EUR', function (): void {
     $posting = JobPosting::factory()->create();
 

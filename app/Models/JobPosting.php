@@ -194,15 +194,16 @@ class JobPosting extends Model
     }
 
     /**
-     * Sources are stored trimmed and lowercase, so "LinkedIn" and "linkedin"
-     * count as one source.
+     * Sources are stored lowercase with whitespace collapsed, so "LinkedIn"
+     * and "linkedin" count as one source, and so do "company  website" and
+     * "company website".
      *
      * @return Attribute<string, string>
      */
     protected function source(): Attribute
     {
         return Attribute::make(
-            set: fn (string $value): string => Str::lower(trim($value)),
+            set: fn (string $value): string => Str::lower(Str::squish($value)),
         );
     }
 
