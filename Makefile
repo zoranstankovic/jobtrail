@@ -1,7 +1,9 @@
 .DEFAULT_GOAL := help
 
 COMPOSE := docker compose
-EXEC    := $(COMPOSE) exec app
+# As www-data, so files that make targets create (composer.lock, formatted
+# sources, logs) belong to the checkout's owner on Linux; see entrypoint.sh.
+EXEC    := $(COMPOSE) exec --user www-data app
 
 .PHONY: help up down fresh test lint shell logs composer npm artisan
 

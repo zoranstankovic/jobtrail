@@ -89,12 +89,13 @@ The default `users` table migration is kept but unused.
 
 1. `db` starts; `app` waits via `depends_on: condition: service_healthy`.
 2. `docker/app/entrypoint.sh` in `app`:
-   1. `composer install` if `vendor/` is missing.
-   2. If `.env` is missing: copy `.env.example`, then `php artisan key:generate`.
-   3. `php artisan migrate --force`. This applies only pending migrations and never drops data.
-   4. `php artisan app:seed-demo-if-empty`. It seeds demo data only when the `companies` table is empty.
-   5. `exec php-fpm`.
-3. `vite` waits for `app` to be healthy, runs `npm install` if `node_modules/` is missing, then `npm run dev`.
+   1. If the checkout belongs to a non-root user (a Linux host), `www-data` takes that user's uid and gid, and every following step runs as `www-data`, so PHP-FPM can write `storage/` and created files belong to the host user. Docker Desktop for macOS shows the checkout as root-owned, so nothing changes there.
+   2. `composer install` if `vendor/` is missing.
+   3. If `.env` is missing: copy `.env.example`, then `php artisan key:generate`.
+   4. `php artisan migrate --force`. This applies only pending migrations and never drops data.
+   5. `php artisan app:seed-demo-if-empty`. It seeds demo data only when the `companies` table is empty.
+   6. `exec php-fpm`.
+3. `vite` waits for `app` to be healthy and runs `docker/vite/start.sh` as the checkout's owner: `npm install` if `node_modules/` is missing, then `npm run dev`.
 4. The app is available at `http://localhost:8080`.
 
 The `app` healthcheck passes only after the entrypoint finishes, e.g. by checking a marker file that the entrypoint writes just before `exec php-fpm`.
@@ -112,7 +113,7 @@ Nothing destructive ever runs automatically.
 
 ### 3.4 Makefile
 
-`up`, `down`, `fresh`, `test`, `lint`, `shell` (bash in `app`), `logs`, `composer`/`npm`/`artisan` passthroughs (e.g. `make artisan cmd="route:list"`).
+`up`, `down`, `fresh`, `test`, `lint`, `shell` (bash in `app`), `logs`, `composer`/`npm`/`artisan` passthroughs (e.g. `make artisan cmd="route:list"`). The passthroughs run as `www-data` (see §3.2), so their files belong to the checkout's owner.
 
 ### 3.5 Code layout
 
@@ -128,7 +129,7 @@ app/
 database/
   migrations/ factories/ seeders/ (DatabaseSeeder -> DemoSeeder)
 docker/
-  app/Dockerfile, app/entrypoint.sh, nginx/default.conf, postgres/init/01-create-testing-db.sql
+  app/Dockerfile, app/entrypoint.sh, vite/start.sh, nginx/default.conf, postgres/init/01-create-testing-db.sql
 resources/js/
   pages/ (postings/, applications/, companies/)  components/  layouts/  types/
 ```

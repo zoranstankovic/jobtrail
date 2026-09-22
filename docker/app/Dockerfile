@@ -39,6 +39,11 @@ ENV COMPOSER_MEMORY_LIMIT=-1
 # drop-in applies to both the CLI and FPM.
 RUN printf 'memory_limit=512M\n' > /usr/local/etc/php/conf.d/zz-memory-limit.ini
 
+# Composer and npm keep their caches here instead of in $HOME, so they work for
+# every user: root, www-data and the checkout's owner (see entrypoint.sh).
+ENV COMPOSER_HOME=/tmp/composer \
+    npm_config_cache=/tmp/npm-cache
+
 WORKDIR /var/www/html
 
 COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint

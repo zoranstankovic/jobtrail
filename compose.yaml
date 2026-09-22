@@ -58,9 +58,9 @@ services:
       app:
         condition: service_healthy
     # The image's ENTRYPOINT runs migrations and php-fpm; this container only
-    # needs Node, so it is overridden.
-    entrypoint: ["/bin/sh", "-c"]
-    command: ["if [ ! -d node_modules ]; then npm install; fi; exec npm run dev"]
+    # needs Node, so it is overridden. The script is read from the mounted
+    # checkout, so it needs no executable bit.
+    entrypoint: ["/bin/sh", "docker/vite/start.sh"]
     working_dir: /var/www/html
     environment:
       VITE_POLLING: "true"
