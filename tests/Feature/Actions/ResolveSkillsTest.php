@@ -27,6 +27,22 @@ it('trims names, skips blanks and collapses duplicates', function (): void {
         ->and(Skill::query()->count())->toBe(2);
 });
 
+it('reuses an existing skill when the name differs only in inner whitespace', function (): void {
+    $existing = Skill::factory()->create(['name' => 'Vue JS']);
+
+    $skills = app(ResolveSkills::class)->handle(['Vue  JS']);
+
+    expect($skills->sole()->is($existing))->toBeTrue()
+        ->and(Skill::query()->count())->toBe(1);
+});
+
+it('collapses inner whitespace and the duplicates it hides', function (): void {
+    $skills = app(ResolveSkills::class)->handle(['Vue   JS', 'vue js']);
+
+    expect($skills->pluck('name')->all())->toBe(['Vue JS'])
+        ->and(Skill::query()->count())->toBe(1);
+});
+
 it('returns nothing for no names', function (): void {
     expect(app(ResolveSkills::class)->handle([]))->toBeEmpty();
 });

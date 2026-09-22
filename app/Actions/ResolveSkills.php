@@ -4,11 +4,12 @@ namespace App\Actions;
 
 use App\Models\Skill;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 
 /**
  * Turns skill names typed into the posting form into Skill records.
- * Matching is case-insensitive, and new names are created on the fly
- * (docs/design.md §4.4).
+ * Matching is case-insensitive with whitespace collapsed, and new names are
+ * created on the fly (docs/design.md §4.4).
  */
 final class ResolveSkills
 {
@@ -22,7 +23,7 @@ final class ResolveSkills
         $seen = [];
 
         foreach ($names as $name) {
-            $name = trim($name);
+            $name = Str::squish($name);
             $key = mb_strtolower($name);
 
             if ($name === '' || isset($seen[$key])) {

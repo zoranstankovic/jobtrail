@@ -86,7 +86,8 @@ class JobPostingRequest extends FormRequest
     }
 
     /**
-     * The typed skill names; ResolveSkills trims and deduplicates them.
+     * The typed skill names; ResolveSkills collapses whitespace in them and
+     * deduplicates them.
      *
      * @return list<string>
      */
