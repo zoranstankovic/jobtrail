@@ -1,11 +1,14 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/blank-vue-starter-kit",
+    "name": "zoranstankovic/jobtrail",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "Personal job search tracker: job postings, companies and application timelines. Laravel 13, Vue 3, PostgreSQL 18.",
     "keywords": [
+        "job-tracker",
         "laravel",
-        "framework"
+        "vue",
+        "inertia",
+        "postgresql"
     ],
     "license": "MIT",
     "require": {
