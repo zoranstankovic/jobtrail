@@ -86,7 +86,7 @@ class JobPosting extends Model
         'stepstone',
         'xing',
         'indeed',
-        'company_website',
+        'direct',
         'referral',
         'arbeitnow',
     ];

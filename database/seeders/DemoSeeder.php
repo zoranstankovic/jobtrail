@@ -113,7 +113,7 @@ class DemoSeeder extends Seeder
     /**
      * @var list<string>
      */
-    private const SOURCES = ['linkedin', 'stepstone', 'xing', 'indeed', 'company_website', 'referral', 'arbeitnow'];
+    private const SOURCES = ['linkedin', 'stepstone', 'xing', 'indeed', 'direct', 'referral', 'arbeitnow'];
 
     /**
      * Status histories. The first ten are used once each, so every status

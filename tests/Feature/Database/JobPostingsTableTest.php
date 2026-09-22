@@ -106,3 +106,21 @@ it('stores posted_at as a calendar date without a time of day', function (): voi
     expect(DB::table('job_postings')->where('id', $posting->id)->value('posted_at'))->toBe('2026-09-14')
         ->and($posting->fresh()?->posted_at?->toDateTimeString())->toBe('2026-09-14 00:00:00');
 });
+
+it('renames the company_website source to direct, and back on rollback', function (): void {
+    $posting = JobPosting::factory()->create(['source' => 'linkedin']);
+    $other = JobPosting::factory()->create(['source' => 'linkedin']);
+    // The old value, written around the model so no mutator touches it.
+    DB::table('job_postings')->where('id', $posting->id)->update(['source' => 'company_website']);
+
+    $migration = require database_path('migrations/2026_09_22_100000_rename_company_website_source_to_direct.php');
+
+    $migration->up();
+
+    expect($posting->fresh()?->source)->toBe('direct')
+        ->and($other->fresh()?->source)->toBe('linkedin');
+
+    $migration->down();
+
+    expect($posting->fresh()?->source)->toBe('company_website');
+});

@@ -174,7 +174,7 @@ A posting without an application means "not applied". No separate flag exists.
 | `company_id` | bigint | FK → `companies.id`, `ON DELETE RESTRICT` |
 | `title` | varchar(255) | NOT NULL |
 | `url` | varchar(2048) | nullable; partial unique index `WHERE url IS NOT NULL` |
-| `source` | varchar(50) | NOT NULL; where the ad was published (`linkedin`, `stepstone`, `xing`, `indeed`, `company_website`, `referral`, `arbeitnow`, …); stored lowercase with whitespace collapsed |
+| `source` | varchar(50) | NOT NULL; where the ad was published (`linkedin`, `stepstone`, `xing`, `indeed`, `direct` (the company's own site), `referral`, `arbeitnow`, …); stored lowercase with whitespace collapsed |
 | `connector` | varchar(50) | nullable; which Phase 2 connector imported the posting; `NULL` = entered manually |
 | `external_id` | varchar(255) | nullable; the posting's ID at the external service |
 | `location` | varchar(255) | nullable |

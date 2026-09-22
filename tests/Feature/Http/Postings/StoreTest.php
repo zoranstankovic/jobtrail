@@ -18,7 +18,7 @@ it('renders the create form with company and source suggestions', function (): v
         ->assertInertia(fn (Assert $page) => $page
             ->component('postings/Create')
             ->where('companies', ['Acme GmbH', 'beta AG'])
-            ->where('sources', ['arbeitnow', 'company_website', 'glassdoor', 'indeed', 'linkedin', 'referral', 'stepstone', 'xing']));
+            ->where('sources', ['arbeitnow', 'direct', 'glassdoor', 'indeed', 'linkedin', 'referral', 'stepstone', 'xing']));
 });
 
 it('creates a posting for an existing company, matched case-insensitively', function (): void {

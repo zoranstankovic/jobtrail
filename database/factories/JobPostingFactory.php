@@ -27,7 +27,7 @@ class JobPostingFactory extends Factory
             'company_id' => Company::factory(),
             'title' => fake()->jobTitle(),
             'url' => fake()->unique()->url(),
-            'source' => fake()->randomElement(['linkedin', 'stepstone', 'xing', 'indeed', 'company_website']),
+            'source' => fake()->randomElement(['linkedin', 'stepstone', 'xing', 'indeed', 'direct']),
             'location' => fake()->randomElement(['Berlin', 'München', 'Hamburg', 'Köln', 'Remote']),
             'work_mode' => fake()->randomElement(WorkMode::cases()),
             'employment_type' => EmploymentType::FullTime,
