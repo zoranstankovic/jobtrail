@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import Pager from '@/components/Pager.vue';
 import PostingFilters from '@/components/postings/PostingFilters.vue';
+import SkillList from '@/components/postings/SkillList.vue';
 import StatusBadge from '@/components/StatusBadge.vue';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
     Empty,
@@ -117,15 +117,10 @@ const { label } = useEnums();
                             {{ label('seniority', posting.seniority) }}
                         </TableCell>
                         <TableCell>
-                            <div class="flex flex-wrap gap-1">
-                                <Badge
-                                    v-for="skill in posting.skills"
-                                    :key="skill"
-                                    variant="secondary"
-                                >
-                                    {{ skill }}
-                                </Badge>
-                            </div>
+                            <SkillList
+                                :skills="posting.skills"
+                                :highlight="filters.skill"
+                            />
                         </TableCell>
                         <TableCell>{{ posting.source }}</TableCell>
                         <TableCell>

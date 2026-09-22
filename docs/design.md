@@ -298,7 +298,7 @@ Every screen is an Inertia page in `resources/js/pages/`. Filters, sorting and p
 
 ### 6.1 Job Postings: index (`/postings`)
 
-- **Columns:** title, company, location, work mode, seniority, skills (chips), source, application status badge (or "Not applied").
+- **Columns:** title, company, location, work mode, seniority, skills (the first three as chips plus a "+N" chip whose tooltip lists the rest; a skill the list is filtered by is always shown), source, application status badge (or "Not applied").
 - **Filters:**
   - full-text search via `search_vector`
   - application state: all / not applied / applied (any application) / a specific status
