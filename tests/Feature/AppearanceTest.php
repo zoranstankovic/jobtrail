@@ -16,7 +16,8 @@ it('renders the dark theme on the server when the cookie says dark', function ()
         ->get('/postings')
         ->assertInertia(fn (Assert $page) => $page->where('appearance', 'dark'))
         ->assertSee('class="dark"', false)
-        ->assertDontSee('prefers-color-scheme', false);
+        ->assertDontSee('prefers-color-scheme', false)
+        ->assertSee('html.dark { background-color: hsl(0 0% 3.9%); color-scheme: dark; }', false);
 });
 
 it('renders the light theme when the cookie says light', function (): void {
@@ -31,4 +32,11 @@ it('treats an unknown appearance cookie as system', function (): void {
     $this->withUnencryptedCookie('appearance', 'purple')
         ->get('/postings')
         ->assertInertia(fn (Assert $page) => $page->where('appearance', 'system'));
+});
+
+it('sets the colour scheme of native controls before the stylesheet loads', function (): void {
+    // "system" decides in the browser, so both rules must be in the page.
+    $this->get('/postings')
+        ->assertSee('html { background-color: hsl(0 0% 100%); color-scheme: light; }', false)
+        ->assertSee('html.dark { background-color: hsl(0 0% 3.9%); color-scheme: dark; }', false);
 });

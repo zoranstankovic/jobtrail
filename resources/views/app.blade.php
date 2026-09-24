@@ -15,11 +15,12 @@
             </script>
         @endif
 
-        {{-- The page background (--background in app.css) before the
+        {{-- The page background (--background in app.css) and the colour
+             scheme of native controls (color-scheme in app.css) before the
              stylesheet has loaded. --}}
         <style>
-            html { background-color: hsl(0 0% 100%); }
-            html.dark { background-color: hsl(0 0% 3.9%); }
+            html { background-color: hsl(0 0% 100%); color-scheme: light; }
+            html.dark { background-color: hsl(0 0% 3.9%); color-scheme: dark; }
         </style>
 
         <link rel="icon" href="/favicon.ico" sizes="any">
