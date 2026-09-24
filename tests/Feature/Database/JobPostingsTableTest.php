@@ -124,3 +124,24 @@ it('renames the company_website source to direct, and back on rollback', functio
 
     expect($posting->fresh()?->source)->toBe('company_website');
 });
+
+it('rejects a blank source written around the model', function (string $source): void {
+    $company = Company::factory()->create();
+
+    // Bypasses the model on purpose, like a bulk importer would.
+    expect(fn () => DB::table('job_postings')->insert([
+        'company_id' => $company->id,
+        'title' => 'Backend Engineer',
+        'source' => $source,
+    ]))->toThrow(QueryException::class, 'job_postings_source_check');
+})->with([
+    'empty' => [''],
+    'whitespace' => ['   '],
+    'tabs and newlines' => ["\t \n"],
+]);
+
+it('rejects a blank source also through the model', function (): void {
+    // The mutator collapses the spaces to '', which the check refuses.
+    expect(fn () => JobPosting::factory()->create(['source' => '   ']))
+        ->toThrow(QueryException::class, 'job_postings_source_check');
+});
