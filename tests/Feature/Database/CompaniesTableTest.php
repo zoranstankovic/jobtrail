@@ -50,3 +50,14 @@ it('suggests the known ATS merged with the ones in use, sorted', function (): vo
         'rexx', 'smartrecruiters', 'softgarden', 'successfactors', 'taleo', 'workday',
     ]);
 });
+
+it('stores a blank ATS as null, also outside HTTP', function (string $ats): void {
+    $company = Company::factory()->create(['ats' => $ats]);
+
+    expect($company->fresh()?->ats)->toBeNull()
+        ->and(Company::atsSuggestions())->toBe(Company::ATS_SUGGESTIONS);
+})->with([
+    'empty' => [''],
+    'whitespace' => ['   '],
+    'tabs and newlines' => ["\t \n"],
+]);

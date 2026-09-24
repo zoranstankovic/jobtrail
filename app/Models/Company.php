@@ -94,14 +94,19 @@ class Company extends Model
 
     /**
      * Stored lowercase with whitespace collapsed, so "Personio" and
-     * "personio" count as one ATS.
+     * "personio" count as one ATS. A blank value becomes null, also when
+     * it does not come through an HTTP request (seeder, tinker, importer).
      *
      * @return Attribute<string|null, string|null>
      */
     protected function ats(): Attribute
     {
         return Attribute::make(
-            set: fn (?string $value): ?string => $value === null ? null : Str::lower(Str::squish($value)),
+            set: function (?string $value): ?string {
+                $ats = Str::lower(Str::squish($value ?? ''));
+
+                return $ats === '' ? null : $ats;
+            },
         );
     }
 }
