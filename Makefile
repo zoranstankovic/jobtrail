@@ -5,11 +5,11 @@ COMPOSE := docker compose
 # sources, logs) belong to the checkout's owner on Linux; see entrypoint.sh.
 EXEC    := $(COMPOSE) exec --user www-data app
 
-.PHONY: help up down fresh test lint shell logs composer npm artisan deploy
+.PHONY: help up down fresh test lint shell logs composer npm artisan deploy restore-test restic
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
-		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-10s\033[0m %s\n", $$1, $$2}'
+		| awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}'
 
 up: ## Start the whole stack in the background
 	$(COMPOSE) up -d
@@ -46,3 +46,9 @@ artisan: ## Run artisan in the app container, e.g. make artisan cmd="route:list"
 
 deploy: ## Deploy origin/main, or TAG=<commit sha>, to the server
 	@TAG="$(TAG)" bash scripts/deploy.sh
+
+restore-test: ## Restore the newest backup into a throwaway database and show it
+	@bash scripts/restore-test.sh
+
+restic: ## Run restic with the Mac's Keychain credentials, e.g. make restic cmd="snapshots"
+	@bash scripts/restic-mac.sh $(cmd)
