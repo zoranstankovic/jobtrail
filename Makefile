@@ -5,7 +5,7 @@ COMPOSE := docker compose
 # sources, logs) belong to the checkout's owner on Linux; see entrypoint.sh.
 EXEC    := $(COMPOSE) exec --user www-data app
 
-.PHONY: help up down fresh test lint shell logs composer npm artisan
+.PHONY: help up down fresh test lint shell logs composer npm artisan deploy
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -43,3 +43,6 @@ npm: ## Run npm in the app container, e.g. make npm cmd="run build"
 
 artisan: ## Run artisan in the app container, e.g. make artisan cmd="route:list"
 	$(EXEC) php artisan $(cmd)
+
+deploy: ## Deploy origin/main, or TAG=<commit sha>, to the server
+	@TAG="$(TAG)" bash scripts/deploy.sh

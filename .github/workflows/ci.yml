@@ -88,6 +88,10 @@ jobs:
       - name: Check formatting and lints (Vite+)
         run: npm run check
 
+      - name: Check shell scripts (ShellCheck)
+        # ShellCheck is preinstalled on GitHub's Ubuntu runners.
+        run: shellcheck scripts/*.sh deploy/*.sh docker/app/*.sh docker/vite/*.sh
+
       - name: Run the test suite (Pest)
         run: php artisan test
 
