@@ -14,6 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
+        // tailscale serve ends HTTPS on the server and forwards plain HTTP to
+        // nginx, which reaches PHP from a Docker network address. Trust the
+        // forwarded scheme and client address from private networks only;
+        // the app is never reachable from a public address.
+        $middleware->trustProxies(at: 'PRIVATE_SUBNETS');
+
         // The sidebar and the theme toggle write these cookies from
         // JavaScript, so they arrive unencrypted and EncryptCookies would
         // discard them.
