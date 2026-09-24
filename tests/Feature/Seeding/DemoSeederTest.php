@@ -92,9 +92,12 @@ it('gives some of the newest postings a fresh application', function (): void {
 it('gives some demo companies a careers page and an ATS', function (): void {
     $this->seed(DemoSeeder::class);
 
+    $urls = Company::query()->whereNotNull('careers_url')->pluck('careers_url')
+        ->merge(Company::query()->whereNotNull('ats_jobs_url')->pluck('ats_jobs_url'));
+
     expect(Company::query()->whereNotNull('careers_url')->count())->toBe(7)
         ->and(Company::query()->whereNotNull('ats')->count())->toBe(6)
         ->and(Company::query()->whereNotNull('ats_jobs_url')->count())->toBe(6)
-        ->and(Company::query()->whereNotNull('ats_jobs_url')->pluck('ats_jobs_url')
-            ->every(fn (string $url): bool => str_contains(parse_url($url, PHP_URL_HOST) ?: '', '.example')))->toBeTrue();
+        ->and($urls)->toHaveCount(13)
+        ->and($urls->reject(fn (string $url): bool => str_ends_with((string) parse_url($url, PHP_URL_HOST), '.example'))->all())->toBe([]);
 });
