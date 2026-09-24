@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Company;
+use Illuminate\Database\QueryException;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\DB;
 
@@ -61,3 +62,34 @@ it('stores a blank ATS as null, also outside HTTP', function (string $ats): void
     'whitespace' => ['   '],
     'tabs and newlines' => ["\t \n"],
 ]);
+
+it('rejects a blank ATS written around the model', function (string $ats): void {
+    // Bypasses the model on purpose: its mutator would turn the blank value
+    // into null before the database saw it.
+    expect(fn () => DB::table('companies')->insert(['name' => 'Nordlicht Software GmbH', 'ats' => $ats]))
+        ->toThrow(QueryException::class, 'companies_ats_check');
+})->with([
+    'empty' => [''],
+    'whitespace' => ['   '],
+    'tabs and newlines' => ["\t \n"],
+]);
+
+it('accepts a named or missing ATS written around the model', function (): void {
+    DB::table('companies')->insert([
+        ['name' => 'Nordlicht Software GmbH', 'ats' => 'personio'],
+        ['name' => 'Hafenblick Digital GmbH', 'ats' => null],
+    ]);
+
+    expect(DB::table('companies')->orderBy('id')->pluck('ats')->all())->toBe(['personio', null]);
+});
+
+it('clears blank ATS values before adding the check', function (): void {
+    $migration = require database_path('migrations/2026_09_24_100000_add_not_blank_check_to_companies_ats.php');
+    $migration->down();
+    // Written around the model, as a seeder or tinker could before the fix.
+    $id = DB::table('companies')->insertGetId(['name' => 'Nordlicht Software GmbH', 'ats' => '  ']);
+
+    $migration->up();
+
+    expect(DB::table('companies')->where('id', $id)->value('ats'))->toBeNull();
+});

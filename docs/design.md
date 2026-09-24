@@ -165,7 +165,7 @@ A posting without an application means "not applied". No separate flag exists.
 | `city` | varchar(255) | nullable |
 | `notes` | text | nullable |
 | `careers_url` | varchar(2048) | nullable; the company's own careers page |
-| `ats` | varchar(50) | nullable; the applicant tracking system it uses (`personio`, `softgarden`, `greenhouse`, …); stored lowercase with whitespace collapsed |
+| `ats` | varchar(50) | nullable; the applicant tracking system it uses (`personio`, `softgarden`, `greenhouse`, …); stored lowercase with whitespace collapsed; a blank value is stored as null; CHECK not blank |
 | `ats_jobs_url` | varchar(2048) | nullable; the company's job board on that ATS |
 | `created_at`, `updated_at` | timestamptz | |
 
