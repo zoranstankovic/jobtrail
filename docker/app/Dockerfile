@@ -61,3 +61,57 @@ RUN chmod +x /usr/local/bin/entrypoint
 
 ENTRYPOINT ["/usr/local/bin/entrypoint"]
 CMD ["php-fpm", "--nodaemonize"]
+
+# Builds everything the production images need: vendor/ without dev packages
+# and the Vite assets. The Wayfinder Vite plugin runs `php artisan` during the
+# build, so this stage needs PHP and Node together, which dev already has.
+FROM dev AS build
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
+# Dependencies first, so these layers stay cached until a lock file changes.
+COPY composer.json composer.lock ./
+RUN composer install --no-dev --no-interaction --prefer-dist --no-progress \
+        --no-scripts --no-autoloader
+COPY package.json package-lock.json .npmrc ./
+RUN npm ci
+
+COPY . .
+# Writes the optimized autoloader and runs package:discover, which caches the
+# service providers of the production packages only. Wayfinder renders its
+# TypeScript through Blade, which needs the compiled-view directory that
+# .dockerignore keeps out of the build context.
+RUN composer dump-autoload --optimize --no-dev \
+    && mkdir -p storage/framework/views \
+    && npm run build \
+    && rm -rf node_modules
+
+FROM base AS app
+
+LABEL org.opencontainers.image.source="https://github.com/zoranstankovic/jobtrail"
+
+RUN cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+COPY docker/app/php/production.ini "$PHP_INI_DIR/conf.d/zz-production.ini"
+
+# The code belongs to root and is read-only for PHP; only storage/ and
+# bootstrap/cache/ are writable by www-data.
+COPY --from=build /var/www/html /var/www/html
+RUN mkdir -p storage/app/private storage/app/public \
+        storage/framework/cache/data storage/framework/sessions \
+        storage/framework/views storage/logs bootstrap/cache \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+COPY docker/app/entrypoint.prod.sh /usr/local/bin/entrypoint
+RUN chmod +x /usr/local/bin/entrypoint
+
+USER www-data
+
+ENTRYPOINT ["/usr/local/bin/entrypoint"]
+CMD ["php-fpm", "--nodaemonize"]
+
+FROM nginx:alpine AS web
+
+LABEL org.opencontainers.image.source="https://github.com/zoranstankovic/jobtrail"
+
+COPY docker/nginx/prod.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /var/www/html/public /var/www/html/public

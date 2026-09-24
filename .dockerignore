@@ -1,12 +1,26 @@
+# The build context for docker/app/Dockerfile. The dev image copies nothing
+# but its entrypoint; the production stages copy the checkout, so local
+# state, secrets and generated files stay out (docs/deployment.md).
 .git
+.github
 .idea
+.superpowers
 docs
+tests
+scripts
+deploy
 node_modules
 vendor
-storage/framework/cache
-storage/framework/sessions
-storage/framework/views
-storage/logs
+.env*
 public/build
 public/hot
-.env
+public/fonts-manifest.dev.json
+bootstrap/cache/*.php
+storage/framework/cache
+storage/framework/sessions
+storage/framework/testing
+storage/framework/views
+storage/logs
+resources/js/actions
+resources/js/routes
+resources/js/wayfinder
