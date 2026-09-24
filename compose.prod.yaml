@@ -1,0 +1,56 @@
+# Production stack (docs/deployment.md). Lives in /opt/jobtrail on the server,
+# next to app.env, secrets/db_password and a .env that sets COMPOSE_FILE and
+# TAG. make deploy copies this file there; never run it from the checkout.
+name: jobtrail-prod
+
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jobtrail
+      POSTGRES_USER: jobtrail
+      # Read from the secret file; used only when the volume is initialised.
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    volumes:
+      # PostgreSQL 18 declares /var/lib/postgresql as the volume (see
+      # compose.yaml). No ports: only app reaches the database.
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobtrail -d jobtrail"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  app:
+    image: ghcr.io/zoranstankovic/jobtrail-app:${TAG:?Set TAG to the commit sha to run}
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./app.env:/var/www/html/.env:ro
+
+  web:
+    image: ghcr.io/zoranstankovic/jobtrail-web:${TAG:?Set TAG to the commit sha to run}
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      # Loopback only: tailscale serve forwards HTTPS here. Docker's published
+      # ports bypass ufw, so a public binding would expose the app.
+      - "127.0.0.1:8080:80"
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1/up || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+secrets:
+  db_password:
+    file: ./secrets/db_password
+
+volumes:
+  pgdata:

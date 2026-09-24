@@ -90,6 +90,7 @@ export default defineConfig({
             // indentation, which diverges from every Compose example, and
             // reflows the design document the plans reference.
             'compose.yaml',
+            'compose.prod.yaml',
             'docs/**',
             'resources/js/components/ui/*',
             'resources/views/mail/*',
