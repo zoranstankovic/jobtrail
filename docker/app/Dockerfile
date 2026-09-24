@@ -1,23 +1,35 @@
 # syntax=docker/dockerfile:1
 
+# One Dockerfile, several targets (docs/design.md §3.1, docs/deployment.md):
+#   dev  the local development image (compose.yaml)
+#   app  production PHP-FPM with the code, vendor/ and the built assets
+#   web  production nginx with public/
+# Without --target Docker builds the last stage, so compose.yaml names dev.
+
 # PHP 8.4 with FPM, on Debian trixie. Laravel 13 supports PHP 8.3-8.5;
 # docs/design.md pins 8.4.
-FROM php:8.4-fpm-trixie
+FROM php:8.4-fpm-trixie AS base
 
-# Build and runtime dependencies for the PHP extensions we need:
+# Libraries for the PHP extensions we need:
 #   libicu-dev  -> intl
 #   libpq-dev   -> pdo_pgsql
 #   libzip-dev  -> zip (Composer uses it to unpack packages quickly)
-#   git, unzip  -> Composer needs them for VCS and archive handling
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        git \
-        unzip \
         libicu-dev \
         libpq-dev \
         libzip-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-install -j"$(nproc)" intl pdo_pgsql zip \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /var/www/html
+
+FROM base AS dev
+
+# Composer needs git and unzip for VCS and archive handling.
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git unzip \
     && rm -rf /var/lib/apt/lists/*
 
 # Composer 2, lifted out of the official Composer image.
@@ -43,8 +55,6 @@ RUN printf 'memory_limit=512M\n' > /usr/local/etc/php/conf.d/zz-memory-limit.ini
 # every user: root, www-data and the checkout's owner (see entrypoint.sh).
 ENV COMPOSER_HOME=/tmp/composer \
     npm_config_cache=/tmp/npm-cache
-
-WORKDIR /var/www/html
 
 COPY docker/app/entrypoint.sh /usr/local/bin/entrypoint
 RUN chmod +x /usr/local/bin/entrypoint

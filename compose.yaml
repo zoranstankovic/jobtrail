@@ -25,6 +25,7 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
+      target: dev
     depends_on:
       db:
         condition: service_healthy
@@ -54,6 +55,7 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
+      target: dev
     depends_on:
       app:
         condition: service_healthy

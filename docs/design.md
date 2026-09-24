@@ -71,7 +71,7 @@ The default `users` table migration is kept but unused.
 
 | Service | Image | Purpose |
 |---|---|---|
-| `app` | custom (`docker/app/Dockerfile`): `php:8.4-fpm` + `pdo_pgsql`, `intl`, Composer, **Node 24** | Laravel via PHP-FPM; runs the entrypoint |
+| `app` | custom (`docker/app/Dockerfile`, target `dev`): `php:8.4-fpm` + `pdo_pgsql`, `intl`, Composer, **Node 24** | Laravel via PHP-FPM; runs the entrypoint |
 | `web` | `nginx:alpine` | Serves `http://localhost:8080`; forwards PHP to `app:9000` |
 | `vite` | same image as `app` | `npm run dev` with hot module replacement on port 5173 |
 | `db` | `postgres:18` | Healthcheck (`pg_isready`); named volume `pgdata` mounted at **`/var/lib/postgresql`** |
