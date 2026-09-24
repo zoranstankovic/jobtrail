@@ -17,6 +17,10 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     *
+     * One-way by nature: after up(), a renamed row cannot be told apart from
+     * one that was entered as "direct", so a rollback turns every "direct"
+     * row into "company_website". Both values mean the same.
      */
     public function down(): void
     {
