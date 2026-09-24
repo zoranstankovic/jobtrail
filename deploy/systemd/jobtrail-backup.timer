@@ -1,0 +1,12 @@
+# Installed to /etc/systemd/system (docs/deployment.md §5.5).
+[Unit]
+Description=Run the JobTrail backup every night
+
+[Timer]
+OnCalendar=*-*-* 03:00:00
+# Run a missed backup at the next boot when the server was off at 03:00.
+Persistent=true
+RandomizedDelaySec=15min
+
+[Install]
+WantedBy=timers.target
